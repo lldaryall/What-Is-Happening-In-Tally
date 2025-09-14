@@ -699,86 +699,77 @@
 
         // Preload assets
         function preload() {
-            // Create simple colored rectangles as placeholder sprites
-            this.load.image('grass', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
-            this.load.image('water', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
-            this.load.image('wall', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
-            this.load.image('player', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
-            
-            // Create actual colored sprites
-            this.add.graphics()
-                .fillStyle(0x4CAF50)
-                .fillRect(0, 0, 32, 32)
-                .generateTexture('grass', 32, 32);
+            // Create actual colored sprites using graphics
+            const grassGraphics = this.add.graphics();
+            grassGraphics.fillStyle(0x4CAF50);
+            grassGraphics.fillRect(0, 0, 32, 32);
+            grassGraphics.generateTexture('grass', 32, 32);
+            grassGraphics.destroy();
                 
-            this.add.graphics()
-                .fillStyle(0x2196F3)
-                .fillRect(0, 0, 32, 32)
-                .generateTexture('water', 32, 32);
+            const waterGraphics = this.add.graphics();
+            waterGraphics.fillStyle(0x2196F3);
+            waterGraphics.fillRect(0, 0, 32, 32);
+            waterGraphics.generateTexture('water', 32, 32);
+            waterGraphics.destroy();
                 
-            this.add.graphics()
-                .fillStyle(0x795548)
-                .fillRect(0, 0, 32, 32)
-                .generateTexture('wall', 32, 32);
+            const wallGraphics = this.add.graphics();
+            wallGraphics.fillStyle(0x795548);
+            wallGraphics.fillRect(0, 0, 32, 32);
+            wallGraphics.generateTexture('wall', 32, 32);
+            wallGraphics.destroy();
                 
-            this.add.graphics()
-                .fillStyle(0xFF5722)
-                .fillRect(0, 0, 24, 24)
-                .generateTexture('player', 24, 24);
+            const playerGraphics = this.add.graphics();
+            playerGraphics.fillStyle(0xFF5722);
+            playerGraphics.fillRect(0, 0, 24, 24);
+            playerGraphics.generateTexture('player', 24, 24);
+            playerGraphics.destroy();
 
-            // Loading progress
-            this.load.on('progress', (progress) => {
+            // Simulate loading progress
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += 0.1;
                 document.getElementById('loading-progress').style.width = (progress * 100) + '%';
                 
                 if (progress > 0.2 && messageIndex < loadingMessages.length - 1) {
                     messageIndex++;
                     document.getElementById('loading-messages').textContent = loadingMessages[messageIndex];
                 }
-            });
-
-            this.load.on('complete', () => {
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('intro-screen').style.display = 'flex';
-                }, 500);
-            });
+                
+                if (progress >= 1) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('intro-screen').style.display = 'flex';
+                    }, 500);
+                }
+            }, 100);
         }
 
         // Create game world
         function create() {
-            // Create tilemap
+            // Create a simple background
             const mapWidth = 20;
             const mapHeight = 15;
             const tileSize = 32;
 
-            // Create a simple map layout
-            const mapData = [
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-            ];
-
-            // Create tilemap
-            const map = this.make.tilemap({ 
-                data: mapData, 
-                tileWidth: tileSize, 
-                tileHeight: tileSize 
-            });
-            
-            const tileset = map.addTilesetImage('grass', 'grass');
-            const layer = map.createLayer(0, tileset, 0, 0);
+            // Create background tiles manually
+            for (let x = 0; x < mapWidth; x++) {
+                for (let y = 0; y < mapHeight; y++) {
+                    let tileType = 'grass';
+                    
+                    // Create borders
+                    if (x === 0 || x === mapWidth - 1 || y === 0 || y === mapHeight - 1) {
+                        tileType = 'wall';
+                    }
+                    
+                    // Add some water tiles for variety
+                    if ((x === 5 && y === 5) || (x === 15 && y === 10)) {
+                        tileType = 'water';
+                    }
+                    
+                    this.add.image(x * tileSize + tileSize/2, y * tileSize + tileSize/2, tileType);
+                }
+            }
 
             // Set world bounds
             this.physics.world.setBounds(0, 0, mapWidth * tileSize, mapHeight * tileSize);
@@ -832,18 +823,17 @@
 
                 // Add overlap detection
                 this.physics.add.overlap(player, zone, () => {
-                    currentZone = zone;
-                    showZoneIndicator(zone);
-                }, null, this);
-
-                // Add exit detection
-                this.physics.add.overlap(player, zone, () => {
-                    if (currentZone === zone) {
-                        currentZone = null;
-                        hideZoneIndicator();
+                    if (currentZone !== zone) {
+                        currentZone = zone;
+                        showZoneIndicator(zone);
                     }
                 }, null, this);
             });
+
+            // Check for zone exits in update loop
+            this.physics.add.overlap(player, interactiveZones, () => {
+                // This will be handled in the update function
+            }, null, this);
         }
 
         // Create zone indicators
@@ -904,6 +894,20 @@
             }
 
             player.setVelocity(velocityX, velocityY);
+
+            // Check for zone exits
+            if (currentZone) {
+                const distance = Phaser.Math.Distance.Between(
+                    player.x, player.y, 
+                    currentZone.x, currentZone.y
+                );
+                const threshold = Math.max(currentZone.displayWidth, currentZone.displayHeight) / 2 + 50;
+                
+                if (distance > threshold) {
+                    currentZone = null;
+                    hideZoneIndicator();
+                }
+            }
         }
 
         // Open section overlay
