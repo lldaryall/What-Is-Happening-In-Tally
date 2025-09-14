@@ -688,70 +688,76 @@
 
         // Initialize the game
         function initGame() {
-            // Check for mobile device
-            if (window.innerHeight < 500 || (window.innerWidth < 768 && window.innerHeight < window.innerWidth)) {
+            console.log('Initializing game...');
+            console.log('Window size:', window.innerWidth, 'x', window.innerHeight);
+            
+            // Check for mobile device - only show mobile message for very small screens
+            if (window.innerHeight < 400 || window.innerWidth < 400) {
+                console.log('Very small screen detected, showing mobile message');
                 document.getElementById('mobile-message').style.display = 'flex';
                 return;
             }
 
-            game = new Phaser.Game(config);
+            console.log('Creating Phaser game...');
+            try {
+                game = new Phaser.Game(config);
+                console.log('Game created successfully');
+            } catch (error) {
+                console.error('Error creating game:', error);
+            }
         }
 
         // Preload assets
         function preload() {
+            console.log('Preload function called');
+            
             // Create actual colored sprites using graphics
             const grassGraphics = this.add.graphics();
             grassGraphics.fillStyle(0x4CAF50);
             grassGraphics.fillRect(0, 0, 32, 32);
             grassGraphics.generateTexture('grass', 32, 32);
             grassGraphics.destroy();
+            console.log('Grass texture created');
                 
             const waterGraphics = this.add.graphics();
             waterGraphics.fillStyle(0x2196F3);
             waterGraphics.fillRect(0, 0, 32, 32);
             waterGraphics.generateTexture('water', 32, 32);
             waterGraphics.destroy();
+            console.log('Water texture created');
                 
             const wallGraphics = this.add.graphics();
             wallGraphics.fillStyle(0x795548);
             wallGraphics.fillRect(0, 0, 32, 32);
             wallGraphics.generateTexture('wall', 32, 32);
             wallGraphics.destroy();
+            console.log('Wall texture created');
                 
             const playerGraphics = this.add.graphics();
             playerGraphics.fillStyle(0xFF5722);
             playerGraphics.fillRect(0, 0, 24, 24);
             playerGraphics.generateTexture('player', 24, 24);
             playerGraphics.destroy();
+            console.log('Player texture created');
 
-            // Simulate loading progress
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 0.1;
-                document.getElementById('loading-progress').style.width = (progress * 100) + '%';
-                
-                if (progress > 0.2 && messageIndex < loadingMessages.length - 1) {
-                    messageIndex++;
-                    document.getElementById('loading-messages').textContent = loadingMessages[messageIndex];
-                }
-                
-                if (progress >= 1) {
-                    clearInterval(loadingInterval);
-                    setTimeout(() => {
-                        document.getElementById('loading-screen').style.display = 'none';
-                        document.getElementById('intro-screen').style.display = 'flex';
-                    }, 500);
-                }
-            }, 100);
+            // Immediately show intro screen since we're not loading external assets
+            setTimeout(() => {
+                console.log('Showing intro screen');
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'flex';
+            }, 1000);
         }
 
         // Create game world
         function create() {
+            console.log('Create function called');
+            
             // Create a simple background
             const mapWidth = 20;
             const mapHeight = 15;
             const tileSize = 32;
 
+            console.log('Creating background tiles...');
             // Create background tiles manually
             for (let x = 0; x < mapWidth; x++) {
                 for (let y = 0; y < mapHeight; y++) {
@@ -775,6 +781,7 @@
             this.physics.world.setBounds(0, 0, mapWidth * tileSize, mapHeight * tileSize);
 
             // Create player
+            console.log('Creating player...');
             player = this.physics.add.sprite(100, 100, 'player');
             player.setCollideWorldBounds(true);
             player.setScale(1.2);
@@ -784,9 +791,11 @@
             this.cameras.main.setZoom(1.5);
 
             // Create interactive zones for portfolio sections
+            console.log('Creating interactive zones...');
             createInteractiveZones.call(this);
 
             // Set up input
+            console.log('Setting up input...');
             cursors = this.input.keyboard.createCursorKeys();
             wasd = this.input.keyboard.addKeys('W,S,A,D');
 
@@ -798,7 +807,10 @@
             });
 
             // Create zone indicators
+            console.log('Creating zone indicators...');
             createZoneIndicators.call(this);
+            
+            console.log('Game world created successfully!');
         }
 
         // Create interactive zones
@@ -936,6 +948,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Play button
             document.getElementById('play-button').addEventListener('click', () => {
+                console.log('Play button clicked');
                 document.getElementById('intro-screen').style.display = 'none';
                 initGame();
             });
