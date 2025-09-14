@@ -385,6 +385,20 @@
             font-size: 0.8rem;
             white-space: nowrap;
         }
+
+        /* Debug info */
+        #debug-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #fff;
+            z-index: 1000;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -409,6 +423,13 @@
         <div id="mobile-message">
             <h2>Rotate Your Device</h2>
             <p>Please rotate your device to landscape mode for the best experience</p>
+        </div>
+
+        <!-- Debug Info -->
+        <div id="debug-info">
+            <div>Status: <span id="debug-status">Loading...</span></div>
+            <div>Window: <span id="debug-window">-</span></div>
+            <div>Game: <span id="debug-game">-</span></div>
         </div>
 
         <!-- Menu Button -->
@@ -641,38 +662,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
     <script>
-        // Game configuration
-        const config = {
-            type: Phaser.AUTO,
-            width: window.innerWidth,
-            height: window.innerHeight,
-            parent: 'game-container',
-            backgroundColor: '#1a1a2e',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    gravity: { y: 0 },
-                    debug: false
-                }
-            },
-            scene: {
-                preload: preload,
-                create: create,
-                update: update
-            },
-            scale: {
-                mode: Phaser.Scale.RESIZE,
-                autoCenter: Phaser.Scale.CENTER_BOTH
+        // Debug function
+        function debug(message) {
+            console.log(message);
+            const debugStatus = document.getElementById('debug-status');
+            if (debugStatus) {
+                debugStatus.textContent = message;
             }
-        };
+        }
 
-        let game;
-        let player;
-        let cursors;
-        let wasd;
+        // Update debug info
+        function updateDebug() {
+            const debugWindow = document.getElementById('debug-window');
+            const debugGame = document.getElementById('debug-game');
+            
+            if (debugWindow) {
+                debugWindow.textContent = window.innerWidth + 'x' + window.innerHeight;
+            }
+            
+            if (debugGame) {
+                debugGame.textContent = game ? 'Created' : 'Not created';
+            }
+        }
+
+        // Show debug info
+        function showDebug() {
+            const debugInfo = document.getElementById('debug-info');
+            if (debugInfo) {
+                debugInfo.style.display = 'block';
+            }
+        }
+
+        // Game variables
+        let game = null;
+        let player = null;
+        let cursors = null;
+        let wasd = null;
         let interactiveZones = [];
         let currentZone = null;
-        let zoneIndicators = [];
 
         // Loading messages
         const loadingMessages = [
@@ -688,61 +715,88 @@
 
         // Initialize the game
         function initGame() {
-            console.log('Initializing game...');
-            console.log('Window size:', window.innerWidth, 'x', window.innerHeight);
+            debug('Initializing game...');
+            updateDebug();
             
-            // Check for mobile device - only show mobile message for very small screens
+            // Check for mobile device
             if (window.innerHeight < 400 || window.innerWidth < 400) {
-                console.log('Very small screen detected, showing mobile message');
+                debug('Mobile device detected');
                 document.getElementById('mobile-message').style.display = 'flex';
                 return;
             }
 
-            console.log('Creating Phaser game...');
+            debug('Creating Phaser game...');
             try {
+                // Game configuration
+                const config = {
+                    type: Phaser.AUTO,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    parent: 'game-container',
+                    backgroundColor: '#1a1a2e',
+                    physics: {
+                        default: 'arcade',
+                        arcade: {
+                            gravity: { y: 0 },
+                            debug: false
+                        }
+                    },
+                    scene: {
+                        preload: preload,
+                        create: create,
+                        update: update
+                    },
+                    scale: {
+                        mode: Phaser.Scale.RESIZE,
+                        autoCenter: Phaser.Scale.CENTER_BOTH
+                    }
+                };
+
                 game = new Phaser.Game(config);
-                console.log('Game created successfully');
+                debug('Game created successfully');
+                updateDebug();
             } catch (error) {
-                console.error('Error creating game:', error);
+                debug('Error creating game: ' + error.message);
+                console.error('Game creation error:', error);
             }
         }
 
         // Preload assets
         function preload() {
-            console.log('Preload function called');
+            debug('Preload function called');
             
-            // Create actual colored sprites using graphics
+            // Create colored sprites
             const grassGraphics = this.add.graphics();
             grassGraphics.fillStyle(0x4CAF50);
             grassGraphics.fillRect(0, 0, 32, 32);
             grassGraphics.generateTexture('grass', 32, 32);
             grassGraphics.destroy();
-            console.log('Grass texture created');
+            debug('Grass texture created');
                 
             const waterGraphics = this.add.graphics();
             waterGraphics.fillStyle(0x2196F3);
             waterGraphics.fillRect(0, 0, 32, 32);
             waterGraphics.generateTexture('water', 32, 32);
             waterGraphics.destroy();
-            console.log('Water texture created');
+            debug('Water texture created');
                 
             const wallGraphics = this.add.graphics();
             wallGraphics.fillStyle(0x795548);
             wallGraphics.fillRect(0, 0, 32, 32);
             wallGraphics.generateTexture('wall', 32, 32);
             wallGraphics.destroy();
-            console.log('Wall texture created');
+            debug('Wall texture created');
                 
             const playerGraphics = this.add.graphics();
             playerGraphics.fillStyle(0xFF5722);
             playerGraphics.fillRect(0, 0, 24, 24);
             playerGraphics.generateTexture('player', 24, 24);
             playerGraphics.destroy();
-            console.log('Player texture created');
+            debug('Player texture created');
 
-            // Immediately show intro screen since we're not loading external assets
+            // Show intro screen
             setTimeout(() => {
-                console.log('Showing intro screen');
+                debug('Showing intro screen');
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('intro-screen').style.display = 'flex';
             }, 1000);
@@ -750,15 +804,14 @@
 
         // Create game world
         function create() {
-            console.log('Create function called');
+            debug('Create function called');
             
-            // Create a simple background
             const mapWidth = 20;
             const mapHeight = 15;
             const tileSize = 32;
 
-            console.log('Creating background tiles...');
-            // Create background tiles manually
+            debug('Creating background tiles...');
+            // Create background tiles
             for (let x = 0; x < mapWidth; x++) {
                 for (let y = 0; y < mapHeight; y++) {
                     let tileType = 'grass';
@@ -768,7 +821,7 @@
                         tileType = 'wall';
                     }
                     
-                    // Add some water tiles for variety
+                    // Add some water tiles
                     if ((x === 5 && y === 5) || (x === 15 && y === 10)) {
                         tileType = 'water';
                     }
@@ -781,21 +834,21 @@
             this.physics.world.setBounds(0, 0, mapWidth * tileSize, mapHeight * tileSize);
 
             // Create player
-            console.log('Creating player...');
+            debug('Creating player...');
             player = this.physics.add.sprite(100, 100, 'player');
             player.setCollideWorldBounds(true);
             player.setScale(1.2);
 
-            // Set up camera to follow player
+            // Set up camera
             this.cameras.main.startFollow(player);
             this.cameras.main.setZoom(1.5);
 
-            // Create interactive zones for portfolio sections
-            console.log('Creating interactive zones...');
+            // Create interactive zones
+            debug('Creating interactive zones...');
             createInteractiveZones.call(this);
 
             // Set up input
-            console.log('Setting up input...');
+            debug('Setting up input...');
             cursors = this.input.keyboard.createCursorKeys();
             wasd = this.input.keyboard.addKeys('W,S,A,D');
 
@@ -806,11 +859,7 @@
                 }
             });
 
-            // Create zone indicators
-            console.log('Creating zone indicators...');
-            createZoneIndicators.call(this);
-            
-            console.log('Game world created successfully!');
+            debug('Game world created successfully!');
         }
 
         // Create interactive zones
@@ -841,46 +890,25 @@
                     }
                 }, null, this);
             });
-
-            // Check for zone exits in update loop
-            this.physics.add.overlap(player, interactiveZones, () => {
-                // This will be handled in the update function
-            }, null, this);
-        }
-
-        // Create zone indicators
-        function createZoneIndicators() {
-            interactiveZones.forEach(zone => {
-                const indicator = this.add.graphics();
-                indicator.lineStyle(2, 0x2779a7, 0.8);
-                indicator.strokeRect(zone.x - zone.displayWidth/2, zone.y - zone.displayHeight/2, zone.displayWidth, zone.displayHeight);
-                
-                const label = this.add.text(zone.x, zone.y - zone.displayHeight/2 - 20, zone.label, {
-                    fontSize: '12px',
-                    fill: '#2779a7',
-                    backgroundColor: '#1a1a2e',
-                    padding: { x: 5, y: 2 }
-                });
-                label.setOrigin(0.5, 0.5);
-                label.setVisible(false);
-                
-                zone.indicator = indicator;
-                zone.labelText = label;
-            });
         }
 
         // Show zone indicator
         function showZoneIndicator(zone) {
             hideZoneIndicator();
-            zone.indicator.setVisible(true);
-            zone.labelText.setVisible(true);
+            // Create visual indicator
+            const indicator = game.scene.scenes[0].add.graphics();
+            indicator.lineStyle(2, 0x2779a7, 0.8);
+            indicator.strokeRect(zone.x - zone.displayWidth/2, zone.y - zone.displayHeight/2, zone.displayWidth, zone.displayHeight);
+            zone.indicator = indicator;
         }
 
         // Hide zone indicator
         function hideZoneIndicator() {
             interactiveZones.forEach(zone => {
-                zone.indicator.setVisible(false);
-                zone.labelText.setVisible(false);
+                if (zone.indicator) {
+                    zone.indicator.destroy();
+                    zone.indicator = null;
+                }
             });
         }
 
@@ -924,6 +952,7 @@
 
         // Open section overlay
         function openSection(sectionName) {
+            debug('Opening section: ' + sectionName);
             const overlay = document.getElementById(sectionName + '-overlay');
             if (overlay) {
                 overlay.style.display = 'flex';
@@ -935,6 +964,7 @@
 
         // Close section overlay
         function closeOverlay(overlayId) {
+            debug('Closing overlay: ' + overlayId);
             const overlay = document.getElementById(overlayId);
             if (overlay) {
                 overlay.style.display = 'none';
@@ -946,15 +976,41 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
+            debug('DOM loaded');
+            showDebug();
+            updateDebug();
+            
+            // Simulate loading
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += 0.1;
+                document.getElementById('loading-progress').style.width = (progress * 100) + '%';
+                
+                if (progress > 0.2 && messageIndex < loadingMessages.length - 1) {
+                    messageIndex++;
+                    document.getElementById('loading-messages').textContent = loadingMessages[messageIndex];
+                }
+                
+                if (progress >= 1) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        debug('Showing intro screen');
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('intro-screen').style.display = 'flex';
+                    }, 500);
+                }
+            }, 100);
+
             // Play button
             document.getElementById('play-button').addEventListener('click', () => {
-                console.log('Play button clicked');
+                debug('Play button clicked');
                 document.getElementById('intro-screen').style.display = 'none';
                 initGame();
             });
 
             // Menu button
             document.getElementById('menu-button').addEventListener('click', () => {
+                debug('Menu button clicked');
                 document.getElementById('menu-overlay').style.display = 'flex';
                 if (game && game.scene) {
                     game.scene.pause();
@@ -1000,15 +1056,13 @@
 
             // Handle window resize
             window.addEventListener('resize', () => {
+                updateDebug();
                 if (game) {
                     game.scale.resize(window.innerWidth, window.innerHeight);
                 }
             });
 
-            // Check for mobile on load
-            if (window.innerHeight < 500 || (window.innerWidth < 768 && window.innerHeight < window.innerWidth)) {
-                document.getElementById('mobile-message').style.display = 'flex';
-            }
+            debug('Event listeners set up');
         });
     </script>
 </body>
