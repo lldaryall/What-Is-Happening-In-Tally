@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #loading-text {
+            font-size: 2rem;
+            color: #2779a7;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        #loading-bar {
+            width: 300px;
+            height: 20px;
+            border: 2px solid #2779a7;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(39, 121, 167, 0.2);
+        }
+
+        #loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #2779a7, #4a9eff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        #loading-messages {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #888;
+            text-align: center;
+            min-height: 1.5rem;
+        }
+
+        /* Intro Screen */
+        #intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        #intro-title {
+            font-size: 3rem;
+            color: #2779a7;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #intro-subtitle {
+            font-size: 1.5rem;
+            color: #4a9eff;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        #play-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #2779a7, #4a9eff);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(39, 121, 167, 0.4);
+        }
+
+        /* Menu Button */
+        #menu-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(39, 121, 167, 0.8);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        #menu-button:hover {
+            background: rgba(39, 121, 167, 1);
+            transform: scale(1.05);
+        }
+
+        /* Menu Overlay */
+        #menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 998;
+        }
+
+        #menu-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #2779a7;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        #menu-title {
+            font-size: 2rem;
+            color: #2779a7;
+            margin-bottom: 2rem;
+        }
+
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(39, 121, 167, 0.3);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        .menu-item:hover {
+            background: rgba(39, 121, 167, 0.6);
+            transform: translateX(5px);
+        }
+
+        /* Section Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 997;
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #2779a7;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay-close:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .overlay h2 {
+            color: #2779a7;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .overlay h3 {
+            color: #4a9eff;
+            margin: 1.5rem 0 0.5rem 0;
+            font-size: 1.3rem;
+        }
+
+        .overlay p, .overlay li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .overlay ul {
+            margin-left: 1.5rem;
+        }
+
+        .project-item {
+            background: rgba(39, 121, 167, 0.1);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #2779a7;
+        }
+
+        .project-title {
+            color: #4a9eff;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: rgba(39, 121, 167, 0.3);
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Support */
+        @media (max-width: 768px) {
+            #intro-title {
+                font-size: 2rem;
+            }
+            
+            #intro-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .overlay-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            #menu-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+
+        @media (max-height: 500px) {
+            #intro-title {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            #intro-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Mobile rotation message */
+        #mobile-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        #mobile-message h2 {
+            color: #2779a7;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        #mobile-message p {
+            color: #4a9eff;
+            font-size: 1.2rem;
+        }
+
+        /* Instructions */
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        /* Interactive zone indicators */
+        .zone-indicator {
+            position: absolute;
+            background: rgba(39, 121, 167, 0.3);
+            border: 2px dashed #2779a7;
+            border-radius: 5px;
+            pointer-events: none;
+            z-index: 50;
+            display: none;
+        }
+
+        .zone-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2779a7;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div id="loading-text">Loading Portfolio...</div>
+            <div id="loading-bar">
+                <div id="loading-progress"></div>
+            </div>
+            <div id="loading-messages">Preparing your adventure...</div>
+        </div>
+
+        <!-- Intro Screen -->
+        <div id="intro-screen">
+            <h1 id="intro-title">Your Name</h1>
+            <p id="intro-subtitle">Interactive Portfolio</p>
+            <button id="play-button">Play</button>
+        </div>
+
+        <!-- Mobile Message -->
+        <div id="mobile-message">
+            <h2>Rotate Your Device</h2>
+            <p>Please rotate your device to landscape mode for the best experience</p>
+        </div>
+
+        <!-- Menu Button -->
+        <button id="menu-button">Menu</button>
+
+        <!-- Instructions -->
+        <div id="instructions">
+            Use arrow keys or WASD to move • Press E near objects to interact
+        </div>
+
+        <!-- Menu Overlay -->
+        <div id="menu-overlay">
+            <div id="menu-content">
+                <h2 id="menu-title">Portfolio Menu</h2>
+                <a href="#" class="menu-item" data-section="about">About Me</a>
+                <a href="#" class="menu-item" data-section="projects">Projects</a>
+                <a href="#" class="menu-item" data-section="resume">Resume/CV</a>
+                <a href="#" class="menu-item" data-section="skills">Skills</a>
+                <a href="#" class="menu-item" data-section="certifications">Certifications</a>
+                <a href="#" class="menu-item" data-section="contact">Contact</a>
+            </div>
+        </div>
+
+        <!-- Section Overlays -->
+        <div id="about-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>About Me</h2>
+                <p>Hello! I'm [Your Name], a passionate [Your Profession] with [X] years of experience in creating innovative digital solutions. I love turning complex problems into simple, beautiful, and intuitive designs.</p>
+                <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.</p>
+                <h3>What I Do</h3>
+                <ul>
+                    <li>Front-end development with modern frameworks</li>
+                    <li>Backend API development and database design</li>
+                    <li>Mobile app development</li>
+                    <li>UI/UX design and prototyping</li>
+                    <li>DevOps and cloud deployment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="projects-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>My Projects</h2>
+                
+                <div class="project-item">
+                    <div class="project-title">E-Commerce Platform</div>
+                    <p>A full-stack e-commerce solution built with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.</p>
+                    <p><strong>Technologies:</strong> React, Node.js, MongoDB, Stripe API</p>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-title">Task Management App</div>
+                    <p>A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.</p>
+                    <p><strong>Technologies:</strong> Vue.js, Socket.io, Express.js, PostgreSQL</p>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-title">Weather Dashboard</div>
+                    <p>A responsive weather dashboard that displays current conditions and forecasts for multiple cities with interactive charts and maps.</p>
+                    <p><strong>Technologies:</strong> JavaScript, Chart.js, OpenWeather API, CSS Grid</p>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-title">Portfolio Website</div>
+                    <p>This interactive portfolio website built with Phaser.js, featuring a game-like interface for exploring my work and skills.</p>
+                    <p><strong>Technologies:</strong> Phaser.js, HTML5 Canvas, CSS3, JavaScript</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="resume-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>Resume / CV</h2>
+                
+                <h3>Experience</h3>
+                <p><strong>Senior Frontend Developer</strong> - Tech Company Inc. (2020 - Present)</p>
+                <ul>
+                    <li>Led development of customer-facing web applications</li>
+                    <li>Mentored junior developers and conducted code reviews</li>
+                    <li>Implemented responsive designs and optimized performance</li>
+                </ul>
+
+                <p><strong>Full Stack Developer</strong> - StartupXYZ (2018 - 2020)</p>
+                <ul>
+                    <li>Developed full-stack web applications from concept to deployment</li>
+                    <li>Collaborated with design team to implement pixel-perfect UIs</li>
+                    <li>Integrated third-party APIs and payment systems</li>
+                </ul>
+
+                <h3>Education</h3>
+                <p><strong>Bachelor of Science in Computer Science</strong> - University Name (2014 - 2018)</p>
+                <p>Relevant coursework: Data Structures, Algorithms, Software Engineering, Database Systems</p>
+
+                <h3>Certifications</h3>
+                <ul>
+                    <li>AWS Certified Developer Associate</li>
+                    <li>Google Cloud Professional Developer</li>
+                    <li>Certified Scrum Master (CSM)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="skills-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>Skills & Technologies</h2>
+                
+                <h3>Frontend Development</h3>
+                <div>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">TypeScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Vue.js</span>
+                    <span class="skill-tag">Angular</span>
+                    <span class="skill-tag">HTML5</span>
+                    <span class="skill-tag">CSS3</span>
+                    <span class="skill-tag">Sass/SCSS</span>
+                    <span class="skill-tag">Webpack</span>
+                    <span class="skill-tag">Vite</span>
+                </div>
+
+                <h3>Backend Development</h3>
+                <div>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">Express.js</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Django</span>
+                    <span class="skill-tag">Flask</span>
+                    <span class="skill-tag">PHP</span>
+                    <span class="skill-tag">Laravel</span>
+                    <span class="skill-tag">REST APIs</span>
+                    <span class="skill-tag">GraphQL</span>
+                </div>
+
+                <h3>Databases</h3>
+                <div>
+                    <span class="skill-tag">MongoDB</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">Redis</span>
+                    <span class="skill-tag">Firebase</span>
+                </div>
+
+                <h3>Tools & Platforms</h3>
+                <div>
+                    <span class="skill-tag">Git</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">AWS</span>
+                    <span class="skill-tag">Google Cloud</span>
+                    <span class="skill-tag">Heroku</span>
+                    <span class="skill-tag">Vercel</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Adobe Creative Suite</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="certifications-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>Certifications & Awards</h2>
+                
+                <h3>Professional Certifications</h3>
+                <div class="project-item">
+                    <div class="project-title">AWS Certified Developer Associate</div>
+                    <p>Amazon Web Services - Validated expertise in developing and maintaining applications on AWS platform</p>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-title">Google Cloud Professional Developer</div>
+                    <p>Google Cloud Platform - Demonstrated ability to design, develop, and manage applications on GCP</p>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-title">Certified Scrum Master (CSM)</div>
+                    <p>Scrum Alliance - Agile project management and team leadership certification</p>
+                </div>
+
+                <h3>Awards & Recognition</h3>
+                <ul>
+                    <li>Employee of the Year 2022 - Tech Company Inc.</li>
+                    <li>Best Innovation Award - StartupXYZ Hackathon 2019</li>
+                    <li>Open Source Contributor - GitHub (500+ contributions)</li>
+                    <li>Speaker - Tech Conference 2023</li>
+                </ul>
+
+                <h3>Online Courses Completed</h3>
+                <ul>
+                    <li>Advanced React Patterns - Frontend Masters</li>
+                    <li>System Design Interview - Educative</li>
+                    <li>Machine Learning Fundamentals - Coursera</li>
+                    <li>Docker & Kubernetes - Udemy</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="contact-overlay" class="overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2>Get In Touch</h2>
+                <p>I'm always interested in new opportunities and exciting projects. Let's connect!</p>
+                
+                <h3>Contact Information</h3>
+                <p><strong>Email:</strong> your.email@example.com</p>
+                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Location:</strong> Your City, Country</p>
+
+                <h3>Social Media</h3>
+                <ul>
+                    <li><strong>LinkedIn:</strong> <a href="#" style="color: #4a9eff;">linkedin.com/in/yourprofile</a></li>
+                    <li><strong>GitHub:</strong> <a href="#" style="color: #4a9eff;">github.com/yourusername</a></li>
+                    <li><strong>Twitter:</strong> <a href="#" style="color: #4a9eff;">@yourusername</a></li>
+                    <li><strong>Portfolio:</strong> <a href="#" style="color: #4a9eff;">yourwebsite.com</a></li>
+                </ul>
+
+                <h3>Let's Work Together</h3>
+                <p>Whether you have a project in mind, want to collaborate, or just want to say hello, I'd love to hear from you. I'm particularly interested in:</p>
+                <ul>
+                    <li>Full-stack web development projects</li>
+                    <li>Mobile app development</li>
+                    <li>Open source contributions</li>
+                    <li>Technical writing and mentoring</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+    <script>
+        // Game configuration
+        const config = {
+            type: Phaser.AUTO,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            parent: 'game-container',
+            backgroundColor: '#1a1a2e',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            },
+            scale: {
+                mode: Phaser.Scale.RESIZE,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            }
+        };
+
+        let game;
+        let player;
+        let cursors;
+        let wasd;
+        let interactiveZones = [];
+        let currentZone = null;
+        let zoneIndicators = [];
+
+        // Loading messages
+        const loadingMessages = [
+            "Preparing your adventure...",
+            "Loading game assets...",
+            "Setting up the world...",
+            "Almost ready...",
+            "Final touches...",
+            "Ready to explore!"
+        ];
+
+        let messageIndex = 0;
+
+        // Initialize the game
+        function initGame() {
+            // Check for mobile device
+            if (window.innerHeight < 500 || (window.innerWidth < 768 && window.innerHeight < window.innerWidth)) {
+                document.getElementById('mobile-message').style.display = 'flex';
+                return;
+            }
+
+            game = new Phaser.Game(config);
+        }
+
+        // Preload assets
+        function preload() {
+            // Create simple colored rectangles as placeholder sprites
+            this.load.image('grass', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+            this.load.image('water', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+            this.load.image('wall', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+            this.load.image('player', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+            
+            // Create actual colored sprites
+            this.add.graphics()
+                .fillStyle(0x4CAF50)
+                .fillRect(0, 0, 32, 32)
+                .generateTexture('grass', 32, 32);
+                
+            this.add.graphics()
+                .fillStyle(0x2196F3)
+                .fillRect(0, 0, 32, 32)
+                .generateTexture('water', 32, 32);
+                
+            this.add.graphics()
+                .fillStyle(0x795548)
+                .fillRect(0, 0, 32, 32)
+                .generateTexture('wall', 32, 32);
+                
+            this.add.graphics()
+                .fillStyle(0xFF5722)
+                .fillRect(0, 0, 24, 24)
+                .generateTexture('player', 24, 24);
+
+            // Loading progress
+            this.load.on('progress', (progress) => {
+                document.getElementById('loading-progress').style.width = (progress * 100) + '%';
+                
+                if (progress > 0.2 && messageIndex < loadingMessages.length - 1) {
+                    messageIndex++;
+                    document.getElementById('loading-messages').textContent = loadingMessages[messageIndex];
+                }
+            });
+
+            this.load.on('complete', () => {
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('intro-screen').style.display = 'flex';
+                }, 500);
+            });
+        }
+
+        // Create game world
+        function create() {
+            // Create tilemap
+            const mapWidth = 20;
+            const mapHeight = 15;
+            const tileSize = 32;
+
+            // Create a simple map layout
+            const mapData = [
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];
+
+            // Create tilemap
+            const map = this.make.tilemap({ 
+                data: mapData, 
+                tileWidth: tileSize, 
+                tileHeight: tileSize 
+            });
+            
+            const tileset = map.addTilesetImage('grass', 'grass');
+            const layer = map.createLayer(0, tileset, 0, 0);
+
+            // Set world bounds
+            this.physics.world.setBounds(0, 0, mapWidth * tileSize, mapHeight * tileSize);
+
+            // Create player
+            player = this.physics.add.sprite(100, 100, 'player');
+            player.setCollideWorldBounds(true);
+            player.setScale(1.2);
+
+            // Set up camera to follow player
+            this.cameras.main.startFollow(player);
+            this.cameras.main.setZoom(1.5);
+
+            // Create interactive zones for portfolio sections
+            createInteractiveZones.call(this);
+
+            // Set up input
+            cursors = this.input.keyboard.createCursorKeys();
+            wasd = this.input.keyboard.addKeys('W,S,A,D');
+
+            // Add interaction key
+            this.input.keyboard.on('keydown-E', () => {
+                if (currentZone) {
+                    openSection(currentZone.section);
+                }
+            });
+
+            // Create zone indicators
+            createZoneIndicators.call(this);
+        }
+
+        // Create interactive zones
+        function createInteractiveZones() {
+            const zones = [
+                { x: 200, y: 150, width: 80, height: 60, section: 'about', label: 'About Me' },
+                { x: 400, y: 200, width: 80, height: 60, section: 'projects', label: 'Projects' },
+                { x: 150, y: 300, width: 80, height: 60, section: 'resume', label: 'Resume' },
+                { x: 350, y: 350, width: 80, height: 60, section: 'skills', label: 'Skills' },
+                { x: 500, y: 250, width: 80, height: 60, section: 'certifications', label: 'Awards' },
+                { x: 300, y: 450, width: 80, height: 60, section: 'contact', label: 'Contact' }
+            ];
+
+            zones.forEach(zoneData => {
+                const zone = this.physics.add.sprite(zoneData.x, zoneData.y, null);
+                zone.setDisplaySize(zoneData.width, zoneData.height);
+                zone.setAlpha(0);
+                zone.section = zoneData.section;
+                zone.label = zoneData.label;
+                
+                interactiveZones.push(zone);
+
+                // Add overlap detection
+                this.physics.add.overlap(player, zone, () => {
+                    currentZone = zone;
+                    showZoneIndicator(zone);
+                }, null, this);
+
+                // Add exit detection
+                this.physics.add.overlap(player, zone, () => {
+                    if (currentZone === zone) {
+                        currentZone = null;
+                        hideZoneIndicator();
+                    }
+                }, null, this);
+            });
+        }
+
+        // Create zone indicators
+        function createZoneIndicators() {
+            interactiveZones.forEach(zone => {
+                const indicator = this.add.graphics();
+                indicator.lineStyle(2, 0x2779a7, 0.8);
+                indicator.strokeRect(zone.x - zone.displayWidth/2, zone.y - zone.displayHeight/2, zone.displayWidth, zone.displayHeight);
+                
+                const label = this.add.text(zone.x, zone.y - zone.displayHeight/2 - 20, zone.label, {
+                    fontSize: '12px',
+                    fill: '#2779a7',
+                    backgroundColor: '#1a1a2e',
+                    padding: { x: 5, y: 2 }
+                });
+                label.setOrigin(0.5, 0.5);
+                label.setVisible(false);
+                
+                zone.indicator = indicator;
+                zone.labelText = label;
+            });
+        }
+
+        // Show zone indicator
+        function showZoneIndicator(zone) {
+            hideZoneIndicator();
+            zone.indicator.setVisible(true);
+            zone.labelText.setVisible(true);
+        }
+
+        // Hide zone indicator
+        function hideZoneIndicator() {
+            interactiveZones.forEach(zone => {
+                zone.indicator.setVisible(false);
+                zone.labelText.setVisible(false);
+            });
+        }
+
+        // Update game loop
+        function update() {
+            if (!player) return;
+
+            // Player movement
+            const speed = 150;
+            let velocityX = 0;
+            let velocityY = 0;
+
+            if (cursors.left.isDown || wasd.A.isDown) {
+                velocityX = -speed;
+            } else if (cursors.right.isDown || wasd.D.isDown) {
+                velocityX = speed;
+            }
+
+            if (cursors.up.isDown || wasd.W.isDown) {
+                velocityY = -speed;
+            } else if (cursors.down.isDown || wasd.S.isDown) {
+                velocityY = speed;
+            }
+
+            player.setVelocity(velocityX, velocityY);
+        }
+
+        // Open section overlay
+        function openSection(sectionName) {
+            const overlay = document.getElementById(sectionName + '-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                if (game && game.scene) {
+                    game.scene.pause();
+                }
+            }
+        }
+
+        // Close section overlay
+        function closeOverlay(overlayId) {
+            const overlay = document.getElementById(overlayId);
+            if (overlay) {
+                overlay.style.display = 'none';
+                if (game && game.scene) {
+                    game.scene.resume();
+                }
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Play button
+            document.getElementById('play-button').addEventListener('click', () => {
+                document.getElementById('intro-screen').style.display = 'none';
+                initGame();
+            });
+
+            // Menu button
+            document.getElementById('menu-button').addEventListener('click', () => {
+                document.getElementById('menu-overlay').style.display = 'flex';
+                if (game && game.scene) {
+                    game.scene.pause();
+                }
+            });
+
+            // Menu close
+            document.getElementById('menu-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'menu-overlay') {
+                    document.getElementById('menu-overlay').style.display = 'none';
+                    if (game && game.scene) {
+                        game.scene.resume();
+                    }
+                }
+            });
+
+            // Menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.getAttribute('data-section');
+                    document.getElementById('menu-overlay').style.display = 'none';
+                    openSection(section);
+                });
+            });
+
+            // Close buttons
+            document.querySelectorAll('.overlay-close').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const overlay = e.target.closest('.overlay');
+                    closeOverlay(overlay.id);
+                });
+            });
+
+            // Close overlays when clicking outside
+            document.querySelectorAll('.overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        closeOverlay(overlay.id);
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (game) {
+                    game.scale.resize(window.innerWidth, window.innerHeight);
+                }
+            });
+
+            // Check for mobile on load
+            if (window.innerHeight < 500 || (window.innerWidth < 768 && window.innerHeight < window.innerWidth)) {
+                document.getElementById('mobile-message').style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>
