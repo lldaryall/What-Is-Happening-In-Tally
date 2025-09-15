@@ -704,12 +704,12 @@
                 
                 // Add hover effects
                 marker.on('pointerover', () => {
-                    marker.setTint(0xffffff);
+                    marker.setTint(0xffff00);
                     label.setStyle({ fill: '#ffff00', stroke: '#000000', strokeThickness: 3 });
                 });
                 
                 marker.on('pointerout', () => {
-                    marker.clearTint();
+                    marker.setTint(0xffffff);
                     label.setStyle({ fill: '#ffffff', stroke: '#000000', strokeThickness: 2 });
                 });
                 
@@ -794,8 +794,8 @@
                         }
                     }
                 } else {
-                    // Player is far from marker
-                    marker.clearTint();
+                    // Player is far from marker - reset to original color
+                    marker.setTint(0xffffff);
                     marker.setAlpha(1);
                 }
             });

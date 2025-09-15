@@ -1,0 +1,61 @@
+﻿Darya Pylypenko
+Tallahassee FL, DaryaP101@gmail.com | (941) 275-0410 | LinkedIn | Website: https://daryapylypenko.com/
+SUMMARY
+________________
+
+
+B.S./M.S. Computer Science student with research experience in algorithms, systems, and AI. Strong background in C++, Python, and quantitative analysis. Seeking a quantitative research/developer internship to apply data modeling, algorithmic problem-solving, and software engineering skills.
+EXPERIENCE
+________________
+
+
+Research Assistant - FSU Department of Computer Science                                                      September 2025 – Present
+      Conduct research in adversarial machine learning focusing on Graph Neural Networks. Reproduced a state-of-the-art GNN fingerprinting framework using PyTorch, simulating large-scale adversarial attacks on graph models. Analyze results to develop statistical defenses for model ownership verification, contributing to open-source AI security tools. Developed experiment design, data handling for thousands of graph queries to detail and cross-team communication.
+Lab Assistant - FAMU-FSU College of Engineering                                                                             August 2025 – Present
+Developed C/C++ algorithms to parse and analyze large X-ray and neutron scattering datasets in a materials science lab. Implemented data-processing pipelines that extracted quantitative patterns from multi-gigabyte experimental data, improving researchers’ insight into material structures. Built an interactive data visualization GUI , wxWidgets in C++ to display scattering results and spectra. The tool streamlined the research workflow by enabling real-time exploration of data and was adopted by the lab for ongoing experiments. 
+Emerging Technology Intern -  FSU Information Technology Services                                            August 2025 – Present
+Maintained and updated official FSU web platforms including the President’s Office, ITS, Provost sites with a focus on performance and accessibility. Implemented responsive design improvements and content updates highlighting FSU’s AI initiatives (ai.fsu.edu), in collaboration with faculty researchers. 
+President - Women in Computer Science (WICS)                                                                               April 2025 - Present          
+     Lead a 100+ member organization to promote diversity in tech. Organize coding workshops, mentorship programs, and industry networking events. Partner with companies and alumni to host technical talks on data science and software engineering, fostering an inclusive and growth-oriented community for underrepresented groups in computing.
+Generative AI Engineer  – Reality AI Lab                                                                                May 2025 – August 2025
+         Built generative AI applications using LangChain, LlamaIndex, and retrieval-augmented generation workflows. Implemented embedding-based search with OpenAI API and Redis, deploying scalable AI services on Google Cloud. Collaborated with a global team on open-source projects to expand educational accessibility.
+Job-Shadow Participant – IT Support, Florida Auditor General                                                    August 2025
+Shadowed the agency’s IT Support group, observing help-desk triage and systems-administration routines while networking with auditors and FSU alumni; gained first-hand insight into how state-level audit operations leverage technology to safeguard public funds.
+
+
+PROJECTS 
+________________
+
+
+Quantitative Trading Strategy Backtester – Personal Project, Python/Pandas (2025)
+Designed and back-tested a trading strategy on historical stock data using Python. Implemented a moving-average crossover algorithm to generate buy/sell signals on S&P 500 daily data. Evaluated performance with key metrics (Sharpe ratio ≈ 1.2, max drawdown 8%) using pandas and NumPy for vectorized computations. Optimized execution by 50% via algorithmic improvements (avoiding Python loops). 
+Monte Carlo Option Pricing Simulator – Personal Project, C++ (2025)
+Built a C++ Monte Carlo simulation engine to price European stock options. Modeled random price paths (Geometric Brownian Motion) and computed option payoffs over 1e6 simulations, utilizing multi-threading for efficiency. Achieved pricing results within <1% of the Black-Scholes formula. Applied probability theory and statistical analysis to estimate option risk-neutral pricing, and profiled the code to optimize runtime using STL and OpenMP.
+ Coppola Artistica Website | C++, Python, Open Ai API ,Versel, HTML, CSS, JavaScript, PHP, MySQL, Adobe Photoshop
+A full-featured e-commerce site for an Italian tile business. The project involved building custom product pages, integrating PHP and MySQL for backend management, and optimizing SEO across listings on Etsy and eBay. Additional work included creating visual branding using Canva and Photoshop.
+C++ Projects |C++, C,  Unix
+A collection of C++  and C projects showcasing skills in object-oriented programming, data structures, algorithms, file I/O, and game development. Includes applications such as text-based games, data analysis tools, and simulation programs, demonstrating proficiency in problem-solving, clean code practices, and efficient program design.
+EDUCATION 
+________________
+
+
+Florida State University                                                                               Expected Graduation, Spring 2027
+B.S./M.S. Computer Science, Business Minor | GPA: 3.7                                                                                           Honors: President’s & Dean’s List, UROP Scholar, STRIVE Award
+Relevant Coursework: Probability & Statistics, Calculus I & II, Discrete Mathematics I & II, Data Structures & Algorithms (COP 4530), Object-Oriented Programming (COP 3330)
+SKILLS
+________________
+
+
+Programming: C++ (STL, multi-threading), Python (pandas, NumPy, PyTorch), C, Bash,  JavaScript
+Languages: Russian, Ukrainian, Italian, Spanish, English
+Data & ML: Machine Learning (PyTorch, scikit-learn), Data Analysis & Visualization (pandas, NumPy, Matplotlib), Statistical Modeling, Algorithms & Data Structures (strong grasp, C++/Python)
+Tools: Git, Linux/Unix environment, GNU Make, Docker, experience with AWS and Google Cloud services
+Skills: ML, Quantitative Analysis, AI, Data Analytics, Data Structures and Algorithms, Time Series Analysis
+Engagement: Tennis club, UROP,Italian club, ACM, Cybersecurity club, WICS club, Cloud Club, IATP Club
+Interests : Weightlifting,Tennis, Art, Volunteering, Marathons
+COMMUNITY INVOLVEMENT
+        
+Relay for Life        - Treasurer                                                                         January 2018 - October 2024
+       Managed budgeting, fundraising, and financial reporting for cancer awareness events. Oversaw donations, tracked expenditures, and collaborated with team leads to support successful charity initiatives and community engagement. 
+Mote Marine        - Team Lead                                                                         September 2019 - July 2023
+       Assisted with marine conservation efforts by participating in beach cleanups, wildlife monitoring, and educational outreach. Contributed to environmental sustainability projects aimed at protecting marine life.
