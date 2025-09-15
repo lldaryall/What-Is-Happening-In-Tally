@@ -509,22 +509,22 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">My Projects</h2>
                 <div class="overlay-text">
-                    <div class="project-item">
+                <div class="project-item">
                         <div class="project-title">Interactive Portfolio Website</div>
                         <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around. This project showcases my ability to create engaging user experiences using modern web technologies.</p>
                         <p><strong>Technologies:</strong> Phaser 3, JavaScript, HTML5, CSS3</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Quantitative Trading Strategy Backtester</div>
                         <p>Designed and back-tested a trading strategy on historical stock data using Python. Implemented a moving-average crossover algorithm to generate buy/sell signals on S&P 500 daily data. Achieved Sharpe ratio ≈ 1.2 and max drawdown 8%.</p>
                         <p><strong>Technologies:</strong> Python, Pandas, NumPy</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Monte Carlo Option Pricing Simulator</div>
                         <p>Built a C++ Monte Carlo simulation engine to price European stock options. Modeled random price paths using Geometric Brownian Motion and computed option payoffs over 1e6 simulations with multi-threading for efficiency. Achieved pricing results within <1% of Black-Scholes formula.</p>
                         <p><strong>Technologies:</strong> C++, STL, OpenMP, Multi-threading</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Coppola Artistica Website</div>
                         <p>A full-featured e-commerce site for an Italian tile business. Built custom product pages, integrated PHP and MySQL for backend management, and optimized SEO across listings on Etsy and eBay. Created visual branding using Canva and Photoshop.</p>
                         <p><strong>Technologies:</strong> C++, Python, OpenAI API, Vercel, HTML, CSS, JavaScript, PHP, MySQL, Adobe Photoshop</p>
@@ -690,7 +690,7 @@
                 'Setting up animations',
                 'Almost ready...'
             ];
-            let messageIndex = 0;
+        let messageIndex = 0;
             let dotCount = 0;
             
             const interval = setInterval(() => {
@@ -713,29 +713,29 @@
         }
 
         // Game configuration - ADVANCED 3D VERSION
-        const config = {
-            type: Phaser.AUTO,
+                const config = {
+                    type: Phaser.AUTO,
             width: 1400,
             height: 900,
             parent: 'game-canvas',
             backgroundColor: '#87CEEB',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    gravity: { y: 0 },
-                    debug: false
-                }
-            },
-            scene: {
-                preload: preload,
-                create: create,
-                update: update
-            },
-            scale: {
+                    physics: {
+                        default: 'arcade',
+                        arcade: {
+                            gravity: { y: 0 },
+                            debug: false
+                        }
+                    },
+                    scene: {
+                        preload: preload,
+                        create: create,
+                        update: update
+                    },
+                    scale: {
                 mode: Phaser.Scale.FIT,
-                autoCenter: Phaser.Scale.CENTER_BOTH
-            }
-        };
+                        autoCenter: Phaser.Scale.CENTER_BOTH
+                    }
+                };
 
         // Preload assets
         function preload() {
@@ -808,15 +808,14 @@
                 { x: 3000, y: 1200, width: 250, height: 180, color: 0x654321, name: 'Research Institute', floors: 4, section: 'projects' }
             ];
             
-            // Store building physics bodies for collision
+            // Store building bodies for collision
             window.buildingBodies = [];
             
             buildings.forEach(building => {
                 // Create 3D building effect
                 const mainBuilding = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
                 
-                // Add physics body for collision
-                this.physics.add.existing(mainBuilding, true);
+                // Store building for collision checking
                 buildingBodies.push(mainBuilding);
                 
                 // Add depth effect (darker side)
@@ -857,12 +856,12 @@
                 
                 // Add hover effect
                 mainBuilding.on('pointerover', () => {
-                    mainBuilding.setTint(0xffff00);
+                    mainBuilding.setScale(1.05);
                     label.setStyle({ fill: '#ffff00' });
                 });
                 
                 mainBuilding.on('pointerout', () => {
-                    mainBuilding.clearTint();
+                    mainBuilding.setScale(1.0);
                     label.setStyle({ fill: '#ffffff' });
                 });
                 
@@ -926,7 +925,7 @@
             }
             console.log('Animated birds created');
             
-            // Create trees with physics
+            // Create trees
             const trees = [];
             for (let i = 0; i < 50; i++) {
                 const x = Math.random() * worldWidth;
@@ -937,11 +936,10 @@
                 // Tree leaves
                 const leaves = this.add.circle(x, y - 30, 40, 0x228B22);
                 
-                // Add physics body for collision
-                this.physics.add.existing(trunk, true);
+                // Store tree for collision checking
                 trees.push(trunk);
             }
-            console.log('Trees with physics created');
+            console.log('Trees created');
             
             // Create advanced 3D NPCs with walking animations
             const npcs = [
@@ -980,9 +978,6 @@
                 
                 person.x = npc.x;
                 person.y = npc.y;
-                
-                // Add physics body
-                this.physics.add.existing(person, true);
                 
                 // Add name label
                 const nameLabel = this.add.text(npc.x, npc.y - 50, npc.name, {
@@ -1091,15 +1086,6 @@
             player.x = 200;
             player.y = 200;
             
-            // Add physics body
-            this.physics.add.existing(player, true);
-            player.body.setSize(20, 40);
-            player.body.setOffset(-10, -20);
-            
-            // Add collision with buildings and trees
-            this.physics.add.collider(player, buildingBodies);
-            this.physics.add.collider(player, trees);
-            
             console.log('Player with physics created');
             
             // Add player walking animation
@@ -1135,10 +1121,16 @@
             wasd = this.input.keyboard.addKeys('W,S,A,D');
             console.log('Input controls set up');
             
-            // Add spacebar to jump
+            // Add spacebar to jump (simple animation)
             this.input.keyboard.on('keydown-SPACE', () => {
-                if (player && player.body.touching.down) {
-                    player.body.setVelocityY(-400);
+                if (player) {
+                    this.tweens.add({
+                        targets: player,
+                        y: player.y - 50,
+                        duration: 300,
+                        yoyo: true,
+                        ease: 'Back.easeOut'
+                    });
                 }
             });
             
@@ -1161,24 +1153,38 @@
         // Update game loop
         function update() {
             if (!player) return;
+
+            // Store old position for collision detection
+            const oldX = player.x;
+            const oldY = player.y;
             
-            // Player movement with physics
+            // Player movement with manual positioning (no physics body)
             const speed = 200;
-            
+            const delta = this.game.loop.delta / 1000;
+
             if (cursors.left.isDown || wasd.A.isDown) {
-                player.body.setVelocityX(-speed);
-            } else if (cursors.right.isDown || wasd.D.isDown) {
-                player.body.setVelocityX(speed);
-            } else {
-                player.body.setVelocityX(0);
+                player.x -= speed * delta;
+            }
+            if (cursors.right.isDown || wasd.D.isDown) {
+                player.x += speed * delta;
+            }
+            if (cursors.up.isDown || wasd.W.isDown) {
+                player.y -= speed * delta;
+            }
+            if (cursors.down.isDown || wasd.S.isDown) {
+                player.y += speed * delta;
             }
             
-            if (cursors.up.isDown || wasd.W.isDown) {
-                player.body.setVelocityY(-speed);
-            } else if (cursors.down.isDown || wasd.S.isDown) {
-                player.body.setVelocityY(speed);
-            } else {
-                player.body.setVelocityY(0);
+            // Manual collision detection with buildings
+            if (window.buildingBodies) {
+                for (let building of buildingBodies) {
+                    if (Phaser.Geom.Rectangle.Contains(building.getBounds(), player.x, player.y)) {
+                        // Collision detected, revert to old position
+                        player.x = oldX;
+                        player.y = oldY;
+                        break;
+                    }
+                }
             }
             
             // Keep player within world bounds
@@ -1285,10 +1291,10 @@
             animateLoading();
             
             // Fallback: Force hide loading screen after 5 seconds
-            setTimeout(() => {
+                    setTimeout(() => {
                 if (document.getElementById('loading-screen').style.display !== 'none') {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('intro-screen').style.display = 'flex';
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('intro-screen').style.display = 'flex';
                 }
             }, 5000);
 
@@ -1321,8 +1327,8 @@
             document.getElementById('map-close').addEventListener('click', function() {
                 document.getElementById('map-overlay').style.display = 'none';
                 if (game) {
-                    game.scene.resume();
-                }
+                        game.scene.resume();
+                    }
             });
 
             // Map location buttons
@@ -1355,12 +1361,12 @@
                     openOverlay(section);
                 });
             });
-            
+
             // Close overlay buttons
             document.querySelectorAll('.overlay-close').forEach(btn => {
                 btn.addEventListener('click', closeOverlay);
             });
-            
+
             // Close overlays when clicking outside
             document.querySelectorAll('.overlay').forEach(overlay => {
                 overlay.addEventListener('click', function(e) {
@@ -1369,17 +1375,17 @@
                     }
                 });
             });
-            
+
             // Close menu when clicking outside
             document.getElementById('menu-overlay').addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.style.display = 'none';
-                    if (game) {
+                if (game) {
                         game.scene.resume();
                     }
                 }
             });
-            
+
             console.log('Event listeners set up');
         });
     </script>
