@@ -168,6 +168,89 @@
             background: #1e5a7a;
         }
 
+        /* Map Button */
+        .map-button {
+            position: absolute;
+            top: 20px;
+            right: 120px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .map-button:hover {
+            background: #27ae60;
+        }
+
+        /* Map Overlay */
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 400;
+        }
+
+        .map-content {
+            background: #2d2d2d;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #2ecc71;
+            text-align: center;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+
+        .map-title {
+            color: #2ecc71;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .map-location {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 2px solid #2ecc71;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-location:hover {
+            background: #2ecc71;
+            color: #000;
+        }
+
+        .location-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-type {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
         /* Game UI */
         .game-ui {
             position: absolute;
@@ -338,6 +421,9 @@
 
         <!-- Menu Button -->
         <button class="menu-button" id="menu-button">Menu</button>
+        
+        <!-- Map Button -->
+        <button class="map-button" id="map-button">Map</button>
 
         <!-- Game UI -->
         <div class="game-ui" id="game-ui" style="display: none;">
@@ -363,6 +449,40 @@
                     <button class="menu-btn" data-section="awards">Awards</button>
                     <button class="menu-btn" data-section="contact">Contact</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Map Overlay -->
+        <div class="map-overlay" id="map-overlay">
+            <div class="map-content">
+                <h2 class="map-title">Portfolio Map</h2>
+                <div class="map-grid">
+                    <div class="map-location" data-location="research-lab">
+                        <div class="location-name">Research Lab</div>
+                        <div class="location-type">About Me</div>
+                    </div>
+                    <div class="map-location" data-location="tech-hub">
+                        <div class="location-name">Tech Hub</div>
+                        <div class="location-type">Projects</div>
+                    </div>
+                    <div class="map-location" data-location="ai-lab">
+                        <div class="location-name">AI Lab</div>
+                        <div class="location-type">Resume</div>
+                    </div>
+                    <div class="map-location" data-location="data-center">
+                        <div class="location-name">Data Center</div>
+                        <div class="location-type">Skills</div>
+                    </div>
+                    <div class="map-location" data-location="innovation-center">
+                        <div class="location-name">Innovation Center</div>
+                        <div class="location-type">Awards</div>
+                    </div>
+                    <div class="map-location" data-location="conference-hall">
+                        <div class="location-name">Conference Hall</div>
+                        <div class="location-type">Contact</div>
+                    </div>
+                </div>
+                <button class="overlay-close" id="map-close">&times;</button>
             </div>
         </div>
 
@@ -592,11 +712,11 @@
             return interval;
         }
 
-        // Game configuration - ENHANCED VERSION
+        // Game configuration - ADVANCED 3D VERSION
         const config = {
             type: Phaser.AUTO,
-            width: 1200,
-            height: 800,
+            width: 1400,
+            height: 900,
             parent: 'game-canvas',
             backgroundColor: '#87CEEB',
             physics: {
@@ -622,13 +742,13 @@
             console.log('Preload function called');
         }
 
-        // Create game world - COMPLEX 3D VERSION
+        // Create game world - ADVANCED 3D VERSION WITH PHYSICS
         function create() {
-            console.log('Create function called - starting complex game world creation');
+            console.log('Create function called - starting advanced 3D world creation');
             
             // Create world bounds
-            const worldWidth = 2400;
-            const worldHeight = 1600;
+            const worldWidth = 4000;
+            const worldHeight = 3000;
             
             // Create sky gradient background
             const sky = this.add.graphics();
@@ -639,13 +759,13 @@
             // Create ground with grass texture
             const ground = this.add.graphics();
             ground.fillStyle(0x90EE90);
-            ground.fillRect(0, worldHeight - 400, worldWidth, 400);
+            ground.fillRect(0, worldHeight - 600, worldWidth, 600);
             
             // Add grass pattern
-            for (let x = 0; x < worldWidth; x += 30) {
-                for (let y = worldHeight - 400; y < worldHeight; y += 30) {
-                    if (Math.random() < 0.7) {
-                        const grass = this.add.rectangle(x + 15, y + 15, 25, 25, 0x7CFC00);
+            for (let x = 0; x < worldWidth; x += 40) {
+                for (let y = worldHeight - 600; y < worldHeight; y += 40) {
+                    if (Math.random() < 0.8) {
+                        const grass = this.add.rectangle(x + 20, y + 20, 35, 35, 0x7CFC00);
                         grass.setAlpha(0.6 + Math.random() * 0.4);
                     }
                 }
@@ -654,10 +774,10 @@
             
             // Create roads with 3D effect
             const roads = [
-                { x: worldWidth/2, y: 200, width: worldWidth, height: 40, color: 0x696969 },
-                { x: worldWidth/2, y: worldHeight - 200, width: worldWidth, height: 40, color: 0x696969 },
-                { x: 200, y: worldHeight/2, width: 40, height: worldHeight, color: 0x696969 },
-                { x: worldWidth - 200, y: worldHeight/2, width: 40, height: worldHeight, color: 0x696969 }
+                { x: worldWidth/2, y: 300, width: worldWidth, height: 60, color: 0x696969 },
+                { x: worldWidth/2, y: worldHeight - 300, width: worldWidth, height: 60, color: 0x696969 },
+                { x: 300, y: worldHeight/2, width: 60, height: worldHeight, color: 0x696969 },
+                { x: worldWidth - 300, y: worldHeight/2, width: 60, height: worldHeight, color: 0x696969 }
             ];
             
             roads.forEach(road => {
@@ -665,111 +785,218 @@
                 this.add.rectangle(road.x, road.y, road.width, road.height, road.color);
                 // Road lines
                 if (road.width > road.height) {
-                    for (let i = 0; i < road.width; i += 60) {
-                        this.add.rectangle(road.x - road.width/2 + i, road.y, 30, 4, 0xFFFFFF);
+                    for (let i = 0; i < road.width; i += 80) {
+                        this.add.rectangle(road.x - road.width/2 + i, road.y, 40, 6, 0xFFFFFF);
                     }
                 } else {
-                    for (let i = 0; i < road.height; i += 60) {
-                        this.add.rectangle(road.x, road.y - road.height/2 + i, 4, 30, 0xFFFFFF);
+                    for (let i = 0; i < road.height; i += 80) {
+                        this.add.rectangle(road.x, road.y - road.height/2 + i, 6, 40, 0xFFFFFF);
                     }
                 }
             });
             console.log('Roads created');
             
-            // Create complex buildings with 3D effect
+            // Create buildings with physics bodies
             const buildings = [
-                { x: 300, y: 300, width: 120, height: 100, color: 0x8B4513, name: 'Research Lab', floors: 3 },
-                { x: 600, y: 250, width: 150, height: 120, color: 0x654321, name: 'Tech Hub', floors: 4 },
-                { x: 900, y: 350, width: 100, height: 80, color: 0x8B4513, name: 'Studio', floors: 2 },
-                { x: 1200, y: 400, width: 140, height: 110, color: 0x654321, name: 'AI Lab', floors: 3 },
-                { x: 300, y: 800, width: 160, height: 130, color: 0x8B4513, name: 'Data Center', floors: 4 },
-                { x: 600, y: 900, width: 130, height: 100, color: 0x654321, name: 'Workshop', floors: 2 },
-                { x: 900, y: 850, width: 120, height: 90, color: 0x8B4513, name: 'Library', floors: 3 },
-                { x: 1200, y: 900, width: 110, height: 80, color: 0x654321, name: 'Office', floors: 2 },
-                { x: 1500, y: 500, width: 180, height: 140, color: 0x8B4513, name: 'Innovation Center', floors: 5 },
-                { x: 1800, y: 700, width: 140, height: 120, color: 0x654321, name: 'Conference Hall', floors: 3 }
+                { x: 500, y: 500, width: 200, height: 150, color: 0x8B4513, name: 'Research Lab', floors: 3, section: 'about' },
+                { x: 1000, y: 400, width: 250, height: 180, color: 0x654321, name: 'Tech Hub', floors: 4, section: 'projects' },
+                { x: 1500, y: 600, width: 180, height: 140, color: 0x8B4513, name: 'AI Lab', floors: 3, section: 'resume' },
+                { x: 500, y: 1200, width: 280, height: 200, color: 0x654321, name: 'Data Center', floors: 4, section: 'skills' },
+                { x: 1000, y: 1300, width: 220, height: 160, color: 0x8B4513, name: 'Innovation Center', floors: 5, section: 'awards' },
+                { x: 1500, y: 1400, width: 200, height: 150, color: 0x654321, name: 'Conference Hall', floors: 3, section: 'contact' },
+                { x: 2500, y: 800, width: 300, height: 220, color: 0x8B4513, name: 'University Campus', floors: 6, section: 'about' },
+                { x: 3000, y: 1200, width: 250, height: 180, color: 0x654321, name: 'Research Institute', floors: 4, section: 'projects' }
             ];
+            
+            // Store building physics bodies for collision
+            window.buildingBodies = [];
             
             buildings.forEach(building => {
                 // Create 3D building effect
                 const mainBuilding = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
                 
+                // Add physics body for collision
+                this.physics.add.existing(mainBuilding, true);
+                buildingBodies.push(mainBuilding);
+                
                 // Add depth effect (darker side)
-                const depth = this.add.rectangle(building.x + 10, building.y + 10, building.width, building.height, building.color - 0x222222);
+                const depth = this.add.rectangle(building.x + 15, building.y + 15, building.width, building.height, building.color - 0x333333);
                 depth.setDepth(-1);
                 
                 // Add roof
-                const roof = this.add.rectangle(building.x, building.y - building.height/2 - 15, building.width + 20, 20, 0x2F4F4F);
+                const roof = this.add.rectangle(building.x, building.y - building.height/2 - 20, building.width + 30, 25, 0x2F4F4F);
                 
-                // Add windows
+                // Add windows with lights
                 for (let i = 0; i < building.floors; i++) {
-                    for (let j = 0; j < 3; j++) {
+                    for (let j = 0; j < 4; j++) {
                         const window = this.add.rectangle(
-                            building.x - building.width/3 + (j * building.width/3), 
-                            building.y - building.height/3 + (i * building.height/building.floors), 
-                            15, 20, 0x87CEEB
+                            building.x - building.width/2.5 + (j * building.width/4), 
+                            building.y - building.height/2.5 + (i * building.height/building.floors), 
+                            20, 25, Math.random() < 0.7 ? 0x87CEEB : 0xFFD700
                         );
-                        window.setAlpha(0.8);
+                        window.setAlpha(0.9);
                     }
                 }
                 
                 // Add door
-                const door = this.add.rectangle(building.x, building.y + building.height/2 - 10, 20, 30, 0x654321);
+                const door = this.add.rectangle(building.x, building.y + building.height/2 - 15, 25, 40, 0x654321);
                 
                 // Add building label
-                const label = this.add.text(building.x, building.y - building.height/2 - 40, building.name, {
+                const label = this.add.text(building.x, building.y - building.height/2 - 50, building.name, {
+                    fontSize: '16px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 3
+                });
+                label.setOrigin(0.5);
+                
+                // Make building interactive
+                mainBuilding.setInteractive();
+                mainBuilding.setData('building', building);
+                
+                // Add hover effect
+                mainBuilding.on('pointerover', () => {
+                    mainBuilding.setTint(0xffff00);
+                    label.setStyle({ fill: '#ffff00' });
+                });
+                
+                mainBuilding.on('pointerout', () => {
+                    mainBuilding.clearTint();
+                    label.setStyle({ fill: '#ffffff' });
+                });
+                
+                // Add click interaction to open portfolio section
+                mainBuilding.on('pointerdown', () => {
+                    if (building.section) {
+                        openOverlay(building.section);
+                    }
+                });
+            });
+            console.log('Buildings with physics created');
+            
+            // Create animated cars
+            const cars = [
+                { x: 100, y: 300, color: 0xff0000, speed: 2 },
+                { x: 200, y: 300, color: 0x0000ff, speed: 1.5 },
+                { x: 300, y: 300, color: 0x00ff00, speed: 2.5 },
+                { x: 100, y: worldHeight - 300, color: 0xffff00, speed: 1.8 },
+                { x: 200, y: worldHeight - 300, color: 0xff00ff, speed: 2.2 }
+            ];
+            
+            cars.forEach(car => {
+                const carSprite = this.add.rectangle(car.x, car.y, 60, 30, car.color);
+                carSprite.setAngle(90);
+                
+                // Animate car movement
+                this.tweens.add({
+                    targets: carSprite,
+                    x: car.x + (Math.random() > 0.5 ? 1 : -1) * 2000,
+                    duration: 10000 / car.speed,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'Linear'
+                });
+            });
+            console.log('Animated cars created');
+            
+            // Create animated birds
+            for (let i = 0; i < 15; i++) {
+                const bird = this.add.circle(Math.random() * worldWidth, Math.random() * 500, 8, 0x000000);
+                
+                // Animate bird flight
+                this.tweens.add({
+                    targets: bird,
+                    x: Math.random() * worldWidth,
+                    y: Math.random() * 500,
+                    duration: 8000 + Math.random() * 12000,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+                
+                // Add wing flapping animation
+                this.tweens.add({
+                    targets: bird,
+                    scaleY: 0.5,
+                    duration: 200,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+            }
+            console.log('Animated birds created');
+            
+            // Create trees with physics
+            const trees = [];
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * worldWidth;
+                const y = Math.random() * (worldHeight - 600) + 300;
+                
+                // Tree trunk
+                const trunk = this.add.rectangle(x, y, 20, 60, 0x8B4513);
+                // Tree leaves
+                const leaves = this.add.circle(x, y - 30, 40, 0x228B22);
+                
+                // Add physics body for collision
+                this.physics.add.existing(trunk, true);
+                trees.push(trunk);
+            }
+            console.log('Trees with physics created');
+            
+            // Create advanced 3D NPCs with walking animations
+            const npcs = [
+                { x: 600, y: 600, color: 0x4169e1, name: 'Dr. Sarah Chen', role: 'AI Researcher', message: 'Welcome to our AI research lab! I work on Graph Neural Networks.' },
+                { x: 1100, y: 500, color: 0xff6347, name: 'Mike Rodriguez', role: 'Tech Lead', message: 'Hey! I lead the development team here. Check out our latest projects!' },
+                { x: 1600, y: 700, color: 0x32cd32, name: 'Alex Johnson', role: 'Data Scientist', message: 'I specialize in quantitative analysis and machine learning. Want to see my work?' },
+                { x: 600, y: 1300, color: 0xffd700, name: 'Prof. Martinez', role: 'Mentor', message: 'I mentor students in computer science. Looking for guidance?' },
+                { x: 1100, y: 1400, color: 0x9370db, name: 'Lisa Wang', role: 'Designer', message: 'I create beautiful user interfaces. Design is my passion!' },
+                { x: 1600, y: 1500, color: 0xff69b4, name: 'David Kim', role: 'Engineer', message: 'I build scalable systems and love solving complex problems!' }
+            ];
+            
+            npcs.forEach(npc => {
+                // Create advanced 3D person sprite
+                const person = this.add.graphics();
+                person.fillStyle(npc.color);
+                
+                // 3D Head with shading
+                person.fillCircle(0, -20, 15);
+                person.fillStyle(npc.color - 0x222222);
+                person.fillCircle(-3, -22, 8);
+                
+                // 3D Body with shading
+                person.fillStyle(npc.color);
+                person.fillRect(-10, -8, 20, 35);
+                person.fillStyle(npc.color - 0x222222);
+                person.fillRect(-8, -6, 8, 33);
+                
+                // 3D Arms
+                person.fillStyle(npc.color);
+                person.fillRect(-18, 2, 10, 4);
+                person.fillRect(8, 2, 10, 4);
+                
+                // 3D Legs
+                person.fillRect(-8, 27, 6, 20);
+                person.fillRect(2, 27, 6, 20);
+                
+                person.x = npc.x;
+                person.y = npc.y;
+                
+                // Add physics body
+                this.physics.add.existing(person, true);
+                
+                // Add name label
+                const nameLabel = this.add.text(npc.x, npc.y - 50, npc.name, {
                     fontSize: '14px',
                     fill: '#ffffff',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
                     strokeThickness: 2
                 });
-                label.setOrigin(0.5);
-            });
-            console.log('Complex buildings created');
-            
-            // Create interactive NPCs with people shapes
-            const npcs = [
-                { x: 400, y: 400, color: 0x4169e1, name: 'Dr. Sarah Chen', role: 'AI Researcher', message: 'Welcome to our AI research lab! I work on Graph Neural Networks.' },
-                { x: 700, y: 350, color: 0xff6347, name: 'Mike Rodriguez', role: 'Tech Lead', message: 'Hey! I lead the development team here. Check out our latest projects!' },
-                { x: 1000, y: 450, color: 0x32cd32, name: 'Alex Johnson', role: 'Data Scientist', message: 'I specialize in quantitative analysis and machine learning. Want to see my work?' },
-                { x: 200, y: 850, color: 0xffd700, name: 'Prof. Martinez', role: 'Mentor', message: 'I mentor students in computer science. Looking for guidance?' },
-                { x: 800, y: 950, color: 0x9370db, name: 'Lisa Wang', role: 'Designer', message: 'I create beautiful user interfaces. Design is my passion!' },
-                { x: 1300, y: 1000, color: 0xff69b4, name: 'David Kim', role: 'Engineer', message: 'I build scalable systems and love solving complex problems!' }
-            ];
-            
-            npcs.forEach(npc => {
-                // Create person-shaped sprite
-                const person = this.add.graphics();
-                person.fillStyle(npc.color);
-                
-                // Head
-                person.fillCircle(0, -15, 12);
-                // Body
-                person.fillRect(-8, -5, 16, 25);
-                // Arms
-                person.fillRect(-15, 0, 8, 3);
-                person.fillRect(7, 0, 8, 3);
-                // Legs
-                person.fillRect(-6, 20, 5, 15);
-                person.fillRect(1, 20, 5, 15);
-                
-                person.x = npc.x;
-                person.y = npc.y;
-                
-                // Add name label
-                const nameLabel = this.add.text(npc.x, npc.y - 40, npc.name, {
-                    fontSize: '12px',
-                    fill: '#ffffff',
-                    fontFamily: 'Courier New',
-                    stroke: '#000000',
-                    strokeThickness: 1
-                });
                 nameLabel.setOrigin(0.5);
                 
                 // Add role label
-                const roleLabel = this.add.text(npc.x, npc.y - 55, npc.role, {
-                    fontSize: '10px',
+                const roleLabel = this.add.text(npc.x, npc.y - 65, npc.role, {
+                    fontSize: '12px',
                     fill: '#ffff00',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
@@ -795,22 +1022,22 @@
                 // Add click interaction
                 person.on('pointerdown', () => {
                     // Show NPC message
-                    const messageText = this.add.text(npc.x, npc.y - 80, npc.message, {
-                        fontSize: '11px',
+                    const messageText = this.add.text(npc.x, npc.y - 90, npc.message, {
+                        fontSize: '12px',
                         fill: '#ffffff',
                         fontFamily: 'Courier New',
                         stroke: '#000000',
                         strokeThickness: 2,
                         backgroundColor: '#000000',
-                        padding: { x: 10, y: 5 }
+                        padding: { x: 15, y: 8 }
                     });
                     messageText.setOrigin(0.5);
                     
-                    // Fade out message after 3 seconds
+                    // Fade out message after 4 seconds
                     this.tweens.add({
                         targets: messageText,
                         alpha: 0,
-                        duration: 3000,
+                        duration: 4000,
                         onComplete: () => messageText.destroy()
                     });
                 });
@@ -818,35 +1045,64 @@
                 // Add walking animation
                 this.tweens.add({
                     targets: person,
-                    x: npc.x + (Math.random() - 0.5) * 100,
-                    duration: 5000 + Math.random() * 5000,
+                    x: npc.x + (Math.random() - 0.5) * 200,
+                    duration: 8000 + Math.random() * 12000,
                     yoyo: true,
                     repeat: -1,
                     ease: 'Sine.easeInOut'
                 });
+                
+                // Add blinking animation
+                this.tweens.add({
+                    targets: person,
+                    alpha: 0.7,
+                    duration: 100,
+                    yoyo: true,
+                    repeat: -1,
+                    repeatDelay: 3000 + Math.random() * 5000
+                });
             });
-            console.log('Interactive NPCs created');
+            console.log('Advanced 3D NPCs created');
             
-            // Create player with person shape
+            // Create player with advanced 3D shape and physics
             player = this.add.graphics();
             player.fillStyle(0xff0000);
             
-            // Head
-            player.fillCircle(0, -15, 12);
-            // Body
-            player.fillRect(-8, -5, 16, 25);
-            // Arms
-            player.fillRect(-15, 0, 8, 3);
-            player.fillRect(7, 0, 8, 3);
-            // Legs
-            player.fillRect(-6, 20, 5, 15);
-            player.fillRect(1, 20, 5, 15);
+            // 3D Head with shading
+            player.fillCircle(0, -20, 15);
+            player.fillStyle(0xcc0000);
+            player.fillCircle(-3, -22, 8);
             
-            player.x = 100;
-            player.y = 100;
-            console.log('Player created at position:', player.x, player.y);
+            // 3D Body with shading
+            player.fillStyle(0xff0000);
+            player.fillRect(-10, -8, 20, 35);
+            player.fillStyle(0xcc0000);
+            player.fillRect(-8, -6, 8, 33);
             
-            // Add player animation
+            // 3D Arms
+            player.fillStyle(0xff0000);
+            player.fillRect(-18, 2, 10, 4);
+            player.fillRect(8, 2, 10, 4);
+            
+            // 3D Legs
+            player.fillRect(-8, 27, 6, 20);
+            player.fillRect(2, 27, 6, 20);
+            
+            player.x = 200;
+            player.y = 200;
+            
+            // Add physics body
+            this.physics.add.existing(player, true);
+            player.body.setSize(20, 40);
+            player.body.setOffset(-10, -20);
+            
+            // Add collision with buildings and trees
+            this.physics.add.collider(player, buildingBodies);
+            this.physics.add.collider(player, trees);
+            
+            console.log('Player with physics created');
+            
+            // Add player walking animation
             this.tweens.add({
                 targets: player,
                 scaleX: 1.05,
@@ -855,81 +1111,23 @@
                 yoyo: true,
                 repeat: -1
             });
-            console.log('Player animation added');
             
-            // Create interactive markers with people shapes
-            const markerData = [
-                { x: 300, y: 200, color: 0x00ff00, section: 'about', name: 'About Me' },
-                { x: 600, y: 300, color: 0x0000ff, section: 'projects', name: 'Projects' },
-                { x: 1000, y: 500, color: 0xff00ff, section: 'resume', name: 'Resume' },
-                { x: 400, y: 800, color: 0xffff00, section: 'skills', name: 'Skills' },
-                { x: 800, y: 200, color: 0xff8000, section: 'awards', name: 'Awards' },
-                { x: 200, y: 600, color: 0x00ffff, section: 'contact', name: 'Contact' }
-            ];
-            
-            markers = markerData.map(data => {
-                // Create person-shaped marker
-                const marker = this.add.graphics();
-                marker.fillStyle(data.color);
-                
-                // Head
-                marker.fillCircle(0, -10, 8);
-                // Body
-                marker.fillRect(-6, -2, 12, 15);
-                // Arms
-                marker.fillRect(-10, 2, 5, 2);
-                marker.fillRect(5, 2, 5, 2);
-                // Legs
-                marker.fillRect(-4, 13, 3, 10);
-                marker.fillRect(1, 13, 3, 10);
-                
-                marker.x = data.x;
-                marker.y = data.y;
-                marker.setData('section', data.section);
-                marker.setData('name', data.name);
-                
-                // Add pulsing animation
-                this.tweens.add({
-                    targets: marker,
-                    scaleX: 1.2,
-                    scaleY: 1.2,
-                    duration: 1500,
-                    yoyo: true,
-                    repeat: -1
-                });
-                
-                // Add label
-                const label = this.add.text(data.x, data.y - 35, data.name, {
-                    fontSize: '12px',
-                    fill: '#ffffff',
-                    fontFamily: 'Courier New',
-                    stroke: '#000000',
-                    strokeThickness: 2
-                });
-                label.setOrigin(0.5);
-                
-                // Make interactive
-                marker.setInteractive();
-                
-                // Add hover effects
-                marker.on('pointerover', () => {
-                    marker.setScale(1.3);
-                    label.setStyle({ fill: '#ffff00', stroke: '#000000', strokeThickness: 3 });
-                });
-                
-                marker.on('pointerout', () => {
-                    marker.setScale(1.0);
-                    label.setStyle({ fill: '#ffffff', stroke: '#000000', strokeThickness: 2 });
-                });
-                
-                return marker;
+            // Add blinking animation
+            this.tweens.add({
+                targets: player,
+                alpha: 0.8,
+                duration: 150,
+                yoyo: true,
+                repeat: -1,
+                repeatDelay: 4000 + Math.random() * 3000
             });
-            console.log('Interactive markers created');
+            
+            console.log('Player animations added');
             
             // Set up camera to follow player
             this.cameras.main.startFollow(player);
             this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
-            this.cameras.main.setZoom(0.8);
+            this.cameras.main.setZoom(0.6);
             console.log('Camera setup completed');
             
             // Set up input
@@ -939,14 +1137,8 @@
             
             // Add spacebar to jump
             this.input.keyboard.on('keydown-SPACE', () => {
-                if (player) {
-                    this.tweens.add({
-                        targets: player,
-                        y: player.y - 50,
-                        duration: 300,
-                        yoyo: true,
-                        ease: 'Back.easeOut'
-                    });
+                if (player && player.body.touching.down) {
+                    player.body.setVelocityY(-400);
                 }
             });
             
@@ -957,64 +1149,46 @@
                         targets: player,
                         x: pointer.worldX,
                         y: pointer.worldY,
-                        duration: 1000,
+                        duration: 1500,
                         ease: 'Power2.easeOut'
                     });
                 }
             });
             
-            console.log('Complex game world creation completed successfully!');
+            console.log('Advanced 3D world creation completed successfully!');
         }
 
         // Update game loop
         function update() {
             if (!player) return;
             
-            // Player movement
-            const speed = 300;
+            // Player movement with physics
+            const speed = 200;
             
             if (cursors.left.isDown || wasd.A.isDown) {
-                player.x -= speed * this.game.loop.delta / 1000;
+                player.body.setVelocityX(-speed);
+            } else if (cursors.right.isDown || wasd.D.isDown) {
+                player.body.setVelocityX(speed);
+            } else {
+                player.body.setVelocityX(0);
             }
-            if (cursors.right.isDown || wasd.D.isDown) {
-                player.x += speed * this.game.loop.delta / 1000;
-            }
+            
             if (cursors.up.isDown || wasd.W.isDown) {
-                player.y -= speed * this.game.loop.delta / 1000;
-            }
-            if (cursors.down.isDown || wasd.S.isDown) {
-                player.y += speed * this.game.loop.delta / 1000;
+                player.body.setVelocityY(-speed);
+            } else if (cursors.down.isDown || wasd.S.isDown) {
+                player.body.setVelocityY(speed);
+            } else {
+                player.body.setVelocityY(0);
             }
             
-            // Manual boundary checking for larger world
+            // Keep player within world bounds
             if (player.x < 30) player.x = 30;
-            if (player.x > 2370) player.x = 2370;
+            if (player.x > 3970) player.x = 3970;
             if (player.y < 30) player.y = 30;
-            if (player.y > 1570) player.y = 1570;
-            
-            // Check for marker interactions
-            markers.forEach(marker => {
-                const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
-                if (distance < 60) {
-                    // Player is close to marker
-                    marker.setAlpha(0.8);
-                    
-                    // Auto-trigger interaction if close enough
-                    if (distance < 40) {
-                        const section = marker.getData('section');
-                        if (section && !currentOverlay) {
-                            console.log('Auto-triggering interaction with:', section);
-                            openOverlay(section);
-                        }
-                    }
-                } else {
-                    // Player is far from marker
-                    marker.setAlpha(1);
-                }
-            });
+            if (player.y > 2970) player.y = 2970;
             
             // Check for random interactions (buildings, NPCs, etc.)
-            if (Math.random() < 0.0005) { // 0.05% chance per frame
+            if (Math.random() < 0.0003) { // 0.03% chance per frame
                 const randomMessages = [
                     "You found a hidden easter egg! 🎉",
                     "The wind whispers secrets of code...",
@@ -1030,21 +1204,26 @@
                     "You notice a new building under construction.",
                     "A friendly NPC waves at you from across the street.",
                     "The Innovation Center glows with possibilities.",
-                    "You feel the energy of the tech community around you."
+                    "You feel the energy of the tech community around you.",
+                    "A car honks in the distance...",
+                    "Birds chirp overhead as you explore.",
+                    "The university campus looks impressive!",
+                    "You can hear the buzz of innovation everywhere.",
+                    "The research institute beckons with new discoveries."
                 ];
                 
                 const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
                 console.log(randomMessage);
                 
                 // Show temporary message on screen
-                const messageText = this.add.text(player.x, player.y - 50, randomMessage, {
+                const messageText = this.add.text(player.x, player.y - 60, randomMessage, {
                     fontSize: '14px',
                     fill: '#ffff00',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
                     strokeThickness: 2,
                     backgroundColor: '#000000',
-                    padding: { x: 10, y: 5 }
+                    padding: { x: 12, y: 6 }
                 });
                 messageText.setOrigin(0.5);
                 
@@ -1052,8 +1231,8 @@
                 this.tweens.add({
                     targets: messageText,
                     alpha: 0,
-                    y: messageText.y - 30,
-                    duration: 4000,
+                    y: messageText.y - 40,
+                    duration: 5000,
                     onComplete: () => messageText.destroy()
                 });
             }
@@ -1128,6 +1307,44 @@
                 if (game) {
                     game.scene.pause();
                 }
+            });
+
+            // Map button
+            document.getElementById('map-button').addEventListener('click', function() {
+                document.getElementById('map-overlay').style.display = 'flex';
+                if (game) {
+                    game.scene.pause();
+                }
+            });
+
+            // Map close button
+            document.getElementById('map-close').addEventListener('click', function() {
+                document.getElementById('map-overlay').style.display = 'none';
+                if (game) {
+                    game.scene.resume();
+                }
+            });
+
+            // Map location buttons
+            document.querySelectorAll('.map-location').forEach(location => {
+                location.addEventListener('click', function() {
+                    const locationType = this.getAttribute('data-location');
+                    document.getElementById('map-overlay').style.display = 'none';
+                    
+                    // Open corresponding portfolio section
+                    const sectionMap = {
+                        'research-lab': 'about',
+                        'tech-hub': 'projects',
+                        'ai-lab': 'resume',
+                        'data-center': 'skills',
+                        'innovation-center': 'awards',
+                        'conference-hall': 'contact'
+                    };
+                    
+                    if (sectionMap[locationType]) {
+                        openOverlay(sectionMap[locationType]);
+                    }
+                });
             });
             
             // Menu section buttons
