@@ -110,18 +110,6 @@
             justify-content: center;
             align-items: center;
             z-index: 999;
-            overflow: hidden;
-        }
-
-        .intro-screen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.5" fill="%23ffffff" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
-            animation: twinkle 3s infinite;
         }
 
         .intro-title {
@@ -129,32 +117,15 @@
             color: #00d4ff;
             margin-bottom: 1rem;
             text-align: center;
-            text-shadow: 0 0 30px #00d4ff, 0 0 60px #00d4ff;
+            text-shadow: 0 0 30px #00d4ff;
             font-weight: bold;
-            animation: titleGlow 2s ease-in-out infinite alternate;
-            position: relative;
-            z-index: 1;
         }
 
         .intro-subtitle {
             font-size: 1.8rem;
             color: #ffffff;
-            margin-bottom: 1rem;
-            text-align: center;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-
-        .intro-description {
-            font-size: 1.2rem;
-            color: #cccccc;
             margin-bottom: 3rem;
             text-align: center;
-            max-width: 600px;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
         }
 
         .play-button {
@@ -169,51 +140,32 @@
             border-radius: 50px;
             transition: all 0.4s ease;
             box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-            position: relative;
-            z-index: 1;
-            text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
         .play-button:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 12px 35px rgba(0, 212, 255, 0.5);
-            background: linear-gradient(45deg, #ff6b6b, #00d4ff);
         }
 
-        .play-button:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        @keyframes titleGlow {
-            0% { text-shadow: 0 0 30px #00d4ff, 0 0 60px #00d4ff; }
-            100% { text-shadow: 0 0 40px #00d4ff, 0 0 80px #00d4ff, 0 0 120px #00d4ff; }
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-        }
-
-        /* Menu Button */
-        .menu-button {
+        /* Game UI */
+        .game-ui {
             position: absolute;
             top: 20px;
-            right: 20px;
-            background: #2779a7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+            left: 20px;
+            color: #ffffff;
             font-size: 1rem;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            border-radius: 5px;
-            z-index: 100;
-            transition: all 0.3s ease;
+            z-index: 50;
         }
 
-        .menu-button:hover {
-            background: #1e5a7a;
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-align: center;
+            z-index: 50;
         }
 
         /* Overlay Styles */
@@ -238,7 +190,6 @@
             max-height: 80%;
             overflow-y: auto;
             border: 2px solid #2779a7;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .overlay-header {
@@ -258,10 +209,6 @@
             font-size: 2rem;
             cursor: pointer;
             font-weight: bold;
-        }
-
-        .overlay-close:hover {
-            color: #ff6b6b;
         }
 
         .overlay-text {
@@ -293,125 +240,6 @@
             border-radius: 20px;
             font-size: 0.9rem;
         }
-
-        /* Mobile Responsiveness */
-        .mobile-message {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #1a1a1a;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .mobile-message h2 {
-            color: #2779a7;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .mobile-message p {
-            color: #ffffff;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        /* Menu Overlay */
-        .menu-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 300;
-        }
-
-        .menu-content {
-            background: #2d2d2d;
-            padding: 2rem;
-            border-radius: 10px;
-            border: 2px solid #2779a7;
-            text-align: center;
-        }
-
-        .menu-title {
-            color: #2779a7;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .menu-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .menu-btn {
-            background: #2779a7;
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            font-size: 1rem;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-btn:hover {
-            background: #1e5a7a;
-            transform: translateY(-2px);
-        }
-
-        /* Game UI */
-        .game-ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #ffffff;
-            font-size: 1rem;
-            z-index: 50;
-        }
-
-        .instructions {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffffff;
-            font-size: 0.9rem;
-            text-align: center;
-            z-index: 50;
-        }
-
-        @media (max-width: 768px) {
-            .intro-title {
-                font-size: 2rem;
-            }
-            
-            .intro-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .overlay-content {
-                max-width: 95%;
-                padding: 1rem;
-            }
-            
-            .overlay-header {
-                font-size: 1.5rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -426,25 +254,15 @@
             <div style="margin-top: 2rem; color: #cccccc; font-size: 0.9rem; cursor: pointer;" id="skip-loading">Click to skip loading</div>
         </div>
 
-        <!-- Mobile Message -->
-        <div class="mobile-message" id="mobile-message">
-            <h2>Rotate Device</h2>
-            <p>Please rotate your device for a better experience</p>
-        </div>
-
         <!-- Intro Screen -->
         <div class="intro-screen" id="intro-screen">
             <h1 class="intro-title">Darya Pylypenko</h1>
             <p class="intro-subtitle">Interactive Portfolio Experience</p>
-            <p class="intro-description">Explore my world of development, creativity, and innovation through this immersive game-style portfolio. Walk around, discover my projects, and learn about my journey in technology.</p>
             <button class="play-button" id="play-button">Enter Portfolio</button>
         </div>
 
         <!-- Game Canvas -->
         <div id="game-canvas"></div>
-
-        <!-- Menu Button -->
-        <button class="menu-button" id="menu-button">Menu</button>
 
         <!-- Game UI -->
         <div class="game-ui" id="game-ui" style="display: none;">
@@ -453,23 +271,8 @@
 
         <!-- Instructions -->
         <div class="instructions" id="instructions" style="display: none;">
-            <div>Use WASD/Arrow Keys to move • Click to move • SPACE to jump • ESC for menu</div>
+            <div>Use WASD/Arrow Keys to move • Click to move • SPACE to jump</div>
             <div>Walk to the glowing markers to explore my portfolio sections</div>
-        </div>
-
-        <!-- Menu Overlay -->
-        <div class="menu-overlay" id="menu-overlay">
-            <div class="menu-content">
-                <h2 class="menu-title">Portfolio Menu</h2>
-                <div class="menu-buttons">
-                    <button class="menu-btn" data-section="about">About Me</button>
-                    <button class="menu-btn" data-section="projects">Projects</button>
-                    <button class="menu-btn" data-section="resume">Resume</button>
-                    <button class="menu-btn" data-section="skills">Skills</button>
-                    <button class="menu-btn" data-section="awards">Awards</button>
-                    <button class="menu-btn" data-section="contact">Contact</button>
-                </div>
-            </div>
         </div>
 
         <!-- Portfolio Section Overlays -->
@@ -481,8 +284,6 @@
                 <div class="overlay-text">
                     <p>Hello! I'm Darya Pylypenko, a passionate developer with expertise in web development, C++ programming, and creating interactive digital experiences.</p>
                     <p>I specialize in full-stack development using modern technologies like JavaScript, React, Node.js, and C++. My journey in technology began with a fascination for how things work, leading me to become a versatile developer who loves creating engaging user experiences and solving complex problems.</p>
-                    <p>I have experience working on various projects including web applications, C++ projects, and interactive portfolios. I'm always eager to learn new technologies and contribute to innovative solutions.</p>
-                    <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on creative side projects that push the boundaries of what's possible with code.</p>
                 </div>
             </div>
         </div>
@@ -495,22 +296,11 @@
                 <div class="overlay-text">
                     <div class="project-item">
                         <div class="project-title">Interactive Portfolio Website</div>
-                        <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around. This project showcases my ability to create engaging user experiences using modern web technologies.</p>
+                        <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around.</p>
                     </div>
                     <div class="project-item">
                         <div class="project-title">Coppola Artistica Website</div>
-                        <p>A modern web application built with React and modern web technologies. Features responsive design, interactive elements, and optimized performance for showcasing artistic work.</p>
-                        <p><strong>Technologies:</strong> React, JavaScript, HTML5, CSS3</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">C++ Projects Collection</div>
-                        <p>A comprehensive collection of C++ projects demonstrating various programming concepts, algorithms, and data structures. Includes projects ranging from basic programming exercises to complex system implementations.</p>
-                        <p><strong>Technologies:</strong> C++, Data Structures, Algorithms</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">Web Development Projects</div>
-                        <p>Various web applications and websites built using modern frameworks and technologies. Includes responsive designs, interactive features, and optimized user experiences.</p>
-                        <p><strong>Technologies:</strong> JavaScript, HTML5, CSS3, React, Node.js</p>
+                        <p>A modern web application built with React and modern web technologies.</p>
                     </div>
                 </div>
             </div>
@@ -522,21 +312,8 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Resume & Experience</h2>
                 <div class="overlay-text">
-                    <h3>Experience</h3>
                     <p><strong>Full Stack Developer</strong> - Freelance (2020-Present)</p>
-                    <p>Developing web applications and interactive experiences using modern technologies. Specializing in React, JavaScript, and C++ development.</p>
-                    
-                    <p><strong>Web Developer</strong> - Various Projects (2019-Present)</p>
-                    <p>Created responsive websites and web applications including the Coppola Artistica website and various C++ projects. Focus on user experience and performance optimization.</p>
-                    
-                    <h3>Skills & Expertise</h3>
-                    <p><strong>Programming Languages:</strong> JavaScript, C++, HTML5, CSS3</p>
-                    <p><strong>Frameworks & Libraries:</strong> React, Node.js, Phaser 3</p>
-                    <p><strong>Development Tools:</strong> Git, GitHub, Modern IDEs</p>
-                    <p><strong>Areas of Focus:</strong> Web Development, Game Development, Interactive Design</p>
-                    
-                    <h3>Education & Learning</h3>
-                    <p>Self-taught developer with strong foundation in computer science principles, data structures, and algorithms. Continuously learning new technologies and best practices.</p>
+                    <p>Developing web applications and interactive experiences using modern technologies.</p>
                 </div>
             </div>
         </div>
@@ -547,39 +324,12 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Skills & Technologies</h2>
                 <div class="overlay-text">
-                    <h3>Programming Languages</h3>
                     <span class="skill-item">JavaScript</span>
                     <span class="skill-item">C++</span>
+                    <span class="skill-item">React</span>
+                    <span class="skill-item">Phaser 3</span>
                     <span class="skill-item">HTML5</span>
                     <span class="skill-item">CSS3</span>
-                    <span class="skill-item">Python</span>
-                    
-                    <h3>Frontend Technologies</h3>
-                    <span class="skill-item">React</span>
-                    <span class="skill-item">Node.js</span>
-                    <span class="skill-item">Phaser 3</span>
-                    <span class="skill-item">Responsive Design</span>
-                    <span class="skill-item">Web APIs</span>
-                    
-                    <h3>Development Tools</h3>
-                    <span class="skill-item">Git</span>
-                    <span class="skill-item">GitHub</span>
-                    <span class="skill-item">VS Code</span>
-                    <span class="skill-item">Chrome DevTools</span>
-                    <span class="skill-item">Terminal/Command Line</span>
-                    
-                    <h3>Game Development</h3>
-                    <span class="skill-item">Phaser 3</span>
-                    <span class="skill-item">Canvas API</span>
-                    <span class="skill-item">2D Graphics</span>
-                    <span class="skill-item">Game Physics</span>
-                    <span class="skill-item">Interactive Design</span>
-                    
-                    <h3>Data Structures & Algorithms</h3>
-                    <span class="skill-item">C++ STL</span>
-                    <span class="skill-item">Algorithm Design</span>
-                    <span class="skill-item">Problem Solving</span>
-                    <span class="skill-item">Code Optimization</span>
                 </div>
             </div>
         </div>
@@ -590,26 +340,9 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Awards & Certifications</h2>
                 <div class="overlay-text">
-                    <div class="project-item">
-                        <div class="project-title">Interactive Portfolio Recognition</div>
-                        <p>Created an innovative game-style portfolio that demonstrates creativity and technical skills in web development and game design.</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">Web Development Projects</div>
-                        <p>Successfully developed and deployed multiple web applications including the Coppola Artistica website, showcasing proficiency in modern web technologies.</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">C++ Programming Excellence</div>
-                        <p>Demonstrated strong programming skills through various C++ projects, showcasing understanding of data structures, algorithms, and software engineering principles.</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">Continuous Learning</div>
-                        <p>Committed to ongoing education and skill development, staying current with the latest technologies and best practices in software development.</p>
-                    </div>
-                    <div class="project-item">
-                        <div class="project-title">Open Source Contributions</div>
-                        <p>Active contributor to open source projects and developer community, sharing knowledge and collaborating with other developers.</p>
-                    </div>
+                    <p>Interactive Portfolio Recognition</p>
+                    <p>Web Development Projects</p>
+                    <p>C++ Programming Excellence</p>
                 </div>
             </div>
         </div>
@@ -620,21 +353,9 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Contact Me</h2>
                 <div class="overlay-text">
-                    <p>I'm always interested in new opportunities and exciting projects!</p>
-                    <br>
                     <p><strong>Email:</strong> darya.pylypenko@example.com</p>
-                    <p><strong>Location:</strong> Available for remote work</p>
-                    <br>
-                    <p><strong>Social Media & Links:</strong></p>
                     <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/darya-pylypenko-24288b207" target="_blank" style="color: #00d4ff;">linkedin.com/in/darya-pylypenko-24288b207</a></p>
                     <p><strong>Website:</strong> <a href="https://daryapylypenko.com/" target="_blank" style="color: #00d4ff;">daryapylypenko.com</a></p>
-                    <p><strong>GitHub:</strong> <a href="https://github.com/lldaryall" target="_blank" style="color: #00d4ff;">github.com/lldaryall</a></p>
-                    <br>
-                    <p><strong>Featured Projects:</strong></p>
-                    <p><strong>Coppola Artistica:</strong> <a href="https://coppolaartistica.vercel.app/" target="_blank" style="color: #00d4ff;">coppolaartistica.vercel.app</a></p>
-                    <p><strong>C++ Projects:</strong> <a href="https://github.com/lldaryall/C-projects" target="_blank" style="color: #00d4ff;">github.com/lldaryall/C-projects</a></p>
-                    <br>
-                    <p>Feel free to reach out if you'd like to collaborate or just want to chat about technology!</p>
                 </div>
             </div>
         </div>
@@ -648,16 +369,6 @@
         let wasd;
         let markers = [];
         let currentOverlay = null;
-
-        // Check if device is mobile
-        function isMobile() {
-            return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        // Show mobile message if on mobile
-        if (isMobile()) {
-            document.getElementById('mobile-message').style.display = 'flex';
-        }
 
         // Loading screen animation
         function animateLoading() {
@@ -691,11 +402,11 @@
             return interval;
         }
 
-        // Game configuration
+        // Game configuration - MINIMAL VERSION
         const config = {
             type: Phaser.AUTO,
-            width: 1000,
-            height: 700,
+            width: 800,
+            height: 600,
             parent: 'game-canvas',
             backgroundColor: '#2d5016',
             physics: {
@@ -709,203 +420,86 @@
                 preload: preload,
                 create: create,
                 update: update
-            },
-            scale: {
-                mode: Phaser.Scale.FIT,
-                autoCenter: Phaser.Scale.CENTER_BOTH,
-                width: 1000,
-                height: 700
             }
         };
 
         // Preload assets
         function preload() {
-            console.log('Preloading assets...');
+            console.log('Preload function called');
         }
 
-        // Create game world
+        // Create game world - ULTRA SIMPLE VERSION
         function create() {
-            console.log('Creating game world...');
+            console.log('Create function called - starting game world creation');
             
-            // Create background
-            this.add.rectangle(0, 0, 2000, 1500, 0x2d5016);
+            // Create a simple background
+            this.add.rectangle(400, 300, 800, 600, 0x2d5016);
+            console.log('Background created');
             
-            // Create grass pattern
-            for (let x = 0; x < 2000; x += 50) {
-                for (let y = 0; y < 1500; y += 50) {
-                    const grass = this.add.rectangle(x + 25, y + 25, 50, 50, 0x4a7c59);
-                    grass.setAlpha(0.8 + Math.random() * 0.2);
+            // Create a simple grass pattern
+            for (let x = 0; x < 800; x += 40) {
+                for (let y = 0; y < 600; y += 40) {
+                    this.add.rectangle(x + 20, y + 20, 40, 40, 0x4a7c59);
                 }
             }
+            console.log('Grass pattern created');
             
-            // Create water areas
-            const water1 = this.add.rectangle(300, 200, 120, 80, 0x4a90e2);
-            const water2 = this.add.rectangle(1200, 600, 150, 100, 0x4a90e2);
-            
-            // Animate water
-            this.tweens.add({
-                targets: [water1, water2],
-                alpha: 0.6,
-                duration: 2000,
-                yoyo: true,
-                repeat: -1
-            });
-            
-            // Create walls/obstacles
-            const walls = [
-                { x: 500, y: 300, width: 200, height: 20 },
-                { x: 800, y: 500, width: 20, height: 150 },
-                { x: 1200, y: 400, width: 100, height: 20 },
-                { x: 200, y: 800, width: 20, height: 100 }
-            ];
-            
-            walls.forEach(wall => {
-                this.add.rectangle(
-                    wall.x + wall.width/2, 
-                    wall.y + wall.height/2, 
-                    wall.width, 
-                    wall.height, 
-                    0x8b4513
-                );
-            });
-            
-            // Create player
-            player = this.add.circle(100, 100, 20, 0xff6b6b);
+            // Create player - BIG RED CIRCLE
+            player = this.add.circle(100, 100, 25, 0xff0000);
             player.setCollideWorldBounds(true);
+            console.log('Player created at position:', player.x, player.y);
             
             // Add player animation
             this.tweens.add({
                 targets: player,
-                scaleX: 1.1,
-                scaleY: 1.1,
-                duration: 1500,
+                scaleX: 1.2,
+                scaleY: 1.2,
+                duration: 1000,
                 yoyo: true,
                 repeat: -1
             });
+            console.log('Player animation added');
             
-            // Set up camera
-            this.cameras.main.startFollow(player);
-            this.cameras.main.setBounds(0, 0, 2000, 1500);
-            this.cameras.main.setZoom(1);
+            // Create simple markers
+            const marker1 = this.add.circle(200, 200, 20, 0x00ff00);
+            const marker2 = this.add.circle(400, 300, 20, 0x0000ff);
+            const marker3 = this.add.circle(600, 400, 20, 0xff00ff);
             
-            // Create interactive markers
-            createMarkers.call(this);
+            markers = [marker1, marker2, marker3];
+            console.log('Markers created');
             
             // Set up input
             cursors = this.input.keyboard.createCursorKeys();
             wasd = this.input.keyboard.addKeys('W,S,A,D');
-
-            // Add keyboard shortcuts
-            this.input.keyboard.on('keydown-ESC', () => {
-                if (currentOverlay) {
-                    closeOverlay();
-                } else {
-                    document.getElementById('menu-overlay').style.display = 'flex';
-                    this.scene.pause();
-                }
-            });
+            console.log('Input controls set up');
             
             // Add spacebar to jump
             this.input.keyboard.on('keydown-SPACE', () => {
                 if (player) {
                     this.tweens.add({
                         targets: player,
-                        y: player.y - 30,
-                        duration: 200,
+                        y: player.y - 50,
+                        duration: 300,
                         yoyo: true,
                         ease: 'Back.easeOut'
                     });
                 }
             });
             
-            // Add mouse/touch controls
+            // Add mouse click to move
             this.input.on('pointerdown', (pointer) => {
-                if (player && !currentOverlay) {
-                    const targetX = pointer.worldX;
-                    const targetY = pointer.worldY;
-                    
+                if (player) {
                     this.tweens.add({
                         targets: player,
-                        x: targetX,
-                        y: targetY,
+                        x: pointer.x,
+                        y: pointer.y,
                         duration: 1000,
                         ease: 'Power2.easeOut'
                     });
                 }
             });
             
-            console.log('Game world created successfully!');
-        }
-
-        // Create interactive markers
-        function createMarkers() {
-            const markerData = [
-                { x: 300, y: 200, section: 'about', color: 0x00d4ff, text: 'About Me' },
-                { x: 600, y: 400, section: 'projects', color: 0x2ecc71, text: 'Projects' },
-                { x: 900, y: 300, section: 'resume', color: 0xe74c3c, text: 'Resume' },
-                { x: 1200, y: 500, section: 'skills', color: 0xf39c12, text: 'Skills' },
-                { x: 400, y: 700, section: 'awards', color: 0x9b59b6, text: 'Awards' },
-                { x: 1000, y: 800, section: 'contact', color: 0x1abc9c, text: 'Contact' }
-            ];
-            
-            markerData.forEach((data, index) => {
-                // Create colored circle markers
-                const marker = this.add.circle(data.x, data.y, 30, data.color);
-                marker.setInteractive();
-                marker.setData('section', data.section);
-                
-                // Add pulsing animation
-                this.tweens.add({
-                    targets: marker,
-                    scaleX: 1.2,
-                    scaleY: 1.2,
-                    duration: 1500,
-                    yoyo: true,
-                    repeat: -1
-                });
-                
-                // Add text label
-                const text = this.add.text(data.x, data.y - 40, data.text, {
-                    fontSize: '16px',
-                    fill: '#ffffff',
-                    fontFamily: 'Courier New',
-                    stroke: '#000000',
-                    strokeThickness: 2
-                });
-                text.setOrigin(0.5);
-                
-                // Add hover effects
-                marker.on('pointerover', () => {
-                    marker.setScale(1.3);
-                    text.setScale(1.2);
-                    text.setStyle({ fill: '#ffff00', stroke: '#000000', strokeThickness: 3 });
-                });
-                
-                marker.on('pointerout', () => {
-                    marker.setScale(1.0);
-                    text.setScale(1.0);
-                    text.setStyle({ fill: '#ffffff', stroke: '#000000', strokeThickness: 2 });
-                });
-                
-                // Add click handler
-                marker.on('pointerdown', () => {
-                    // Add click animation
-                    this.tweens.add({
-                        targets: marker,
-                        scaleX: 1.5,
-                        scaleY: 1.5,
-                        duration: 100,
-                        yoyo: true
-                    });
-                    
-                    // Open overlay
-                    setTimeout(() => {
-                        openOverlay(data.section);
-                    }, 200);
-                });
-                
-                markers.push(marker);
-            });
+            console.log('Game world creation completed successfully!');
         }
 
         // Update game loop
@@ -927,18 +521,6 @@
             if (cursors.down.isDown || wasd.S.isDown) {
                 player.y += speed * this.game.loop.delta / 1000;
             }
-            
-            // Check for marker interactions
-            markers.forEach(marker => {
-                const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
-                if (distance < 80) {
-                    marker.setTint(0xffffff);
-                    marker.setAlpha(0.8);
-                } else {
-                    marker.clearTint();
-                    marker.setAlpha(1);
-                }
-            });
         }
 
         // Open overlay for specific section
@@ -947,7 +529,6 @@
             if (overlay) {
                 overlay.style.display = 'flex';
                 currentOverlay = overlay;
-                // Pause game
                 if (game) {
                     game.scene.pause();
                 }
@@ -959,7 +540,6 @@
             if (currentOverlay) {
                 currentOverlay.style.display = 'none';
                 currentOverlay = null;
-                // Resume game
                 if (game) {
                     game.scene.resume();
                 }
@@ -968,14 +548,23 @@
 
         // Start the game
         function startGame() {
+            console.log('Starting game...');
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('game-ui').style.display = 'block';
             document.getElementById('instructions').style.display = 'block';
-            game = new Phaser.Game(config);
+            
+            try {
+                game = new Phaser.Game(config);
+                console.log('Phaser game created successfully');
+            } catch (error) {
+                console.error('Error creating Phaser game:', error);
+            }
         }
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting initialization');
+            
             // Start loading animation
             animateLoading();
             
@@ -995,23 +584,6 @@
             
             // Play button
             document.getElementById('play-button').addEventListener('click', startGame);
-
-            // Menu button
-            document.getElementById('menu-button').addEventListener('click', function() {
-                document.getElementById('menu-overlay').style.display = 'flex';
-                if (game) {
-                    game.scene.pause();
-                }
-            });
-            
-            // Menu section buttons
-            document.querySelectorAll('.menu-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    document.getElementById('menu-overlay').style.display = 'none';
-                    openOverlay(section);
-                });
-            });
             
             // Close overlay buttons
             document.querySelectorAll('.overlay-close').forEach(btn => {
@@ -1027,22 +599,7 @@
                 });
             });
             
-            // Close menu when clicking outside
-            document.getElementById('menu-overlay').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                    if (game) {
-                        game.scene.resume();
-                    }
-                }
-            });
-            
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (game) {
-                    game.scale.refresh();
-                }
-            });
+            console.log('Event listeners set up');
         });
     </script>
 </body>
