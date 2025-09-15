@@ -830,8 +830,13 @@
 
         // Create enhanced game world
         function create() {
+            console.log('Creating game world...');
+            
             // Create animated background with stars
             this.add.rectangle(0, 0, 2400, 1800, 0x0a0a0a);
+            
+            // Add a test rectangle to make sure something is visible
+            this.add.rectangle(100, 100, 50, 50, 0xff0000);
             
             // Add animated stars background
             for (let i = 0; i < 200; i++) {
@@ -852,11 +857,11 @@
                 });
             }
             
-            // Create grass tiles
+            // Create grass tiles with fallback
             for (let x = 0; x < 2400; x += 32) {
                 for (let y = 0; y < 1800; y += 32) {
-                    const grass = this.add.image(x, y, 'grass');
-                    grass.setOrigin(0, 0);
+                    // Use simple rectangle for grass
+                    const grass = this.add.rectangle(x + 16, y + 16, 32, 32, 0x4a7c59);
                     
                     // Add subtle grass animation
                     if (Math.random() < 0.1) {
@@ -872,15 +877,8 @@
             }
             
             // Create water areas with animation
-            const water1 = this.add.image(200, 200, 'water');
-            water1.setOrigin(0, 0);
-            water1.setScale(3, 3);
-            water1.setTint(0x4a90e2);
-            
-            const water2 = this.add.image(1200, 800, 'water');
-            water2.setOrigin(0, 0);
-            water2.setScale(5, 3);
-            water2.setTint(0x4a90e2);
+            const water1 = this.add.rectangle(200 + 48, 200 + 48, 96, 96, 0x4a90e2);
+            const water2 = this.add.rectangle(1200 + 80, 800 + 48, 160, 96, 0x4a90e2);
             
             // Animate water
             this.tweens.add({
@@ -901,16 +899,33 @@
             ];
             
             walls.forEach(wall => {
-                for (let x = 0; x < wall.width; x += 32) {
-                    for (let y = 0; y < wall.height; y += 32) {
-                        const wallTile = this.add.image(wall.x + x, wall.y + y, 'wall');
-                        wallTile.setOrigin(0, 0);
-                    }
-                }
+                // Create simple rectangle walls
+                const wallRect = this.add.rectangle(
+                    wall.x + wall.width/2, 
+                    wall.y + wall.height/2, 
+                    wall.width, 
+                    wall.height, 
+                    0x8b4513
+                );
+                
+                // Add border for brick effect
+                this.add.rectangle(
+                    wall.x + wall.width/2, 
+                    wall.y + wall.height/2, 
+                    wall.width, 
+                    wall.height, 
+                    0x000000, 
+                    0
+                ).setStrokeStyle(2, 0x654321);
             });
             
             // Create player with enhanced sprite
-            player = this.add.image(200, 200, 'player');
+            try {
+                player = this.add.image(200, 200, 'player');
+            } catch (e) {
+                // Fallback to simple circle if sprite fails
+                player = this.add.circle(200, 200, 12, 0xff6b6b);
+            }
             player.setCollideWorldBounds(true);
             
             // Add player breathing animation
@@ -924,18 +939,29 @@
             });
             
             // Add player trail effect
-            const trail = this.add.particles(player.x, player.y, 'player', {
-                scale: { start: 0.3, end: 0 },
-                speed: { min: 10, max: 30 },
-                lifespan: 1000,
-                quantity: 2,
-                frequency: 100
-            });
-            
-            // Update trail position
-            this.events.on('update', () => {
-                trail.setPosition(player.x, player.y);
-            });
+            try {
+                const trail = this.add.particles(player.x, player.y, 'player', {
+                    scale: { start: 0.3, end: 0 },
+                    speed: { min: 10, max: 30 },
+                    lifespan: 1000,
+                    quantity: 2,
+                    frequency: 100
+                });
+                
+                // Update trail position
+                this.events.on('update', () => {
+                    trail.setPosition(player.x, player.y);
+                });
+            } catch (e) {
+                // Fallback: simple trail effect
+                const trail = this.add.particles(player.x, player.y, 'player', {
+                    scale: { start: 0.1, end: 0 },
+                    speed: { min: 10, max: 30 },
+                    lifespan: 1000,
+                    quantity: 1,
+                    frequency: 200
+                });
+            }
             
             // Set up camera to follow player
             this.cameras.main.startFollow(player);
@@ -943,13 +969,24 @@
             this.cameras.main.setZoom(0.8);
             
             // Create particle system
-            particles = this.add.particles(0, 0, 'player', {
-                scale: { start: 0.1, end: 0 },
-                speed: { min: 20, max: 50 },
-                lifespan: 2000,
-                quantity: 1,
-                frequency: 1000
-            });
+            try {
+                particles = this.add.particles(0, 0, 'player', {
+                    scale: { start: 0.1, end: 0 },
+                    speed: { min: 20, max: 50 },
+                    lifespan: 2000,
+                    quantity: 1,
+                    frequency: 1000
+                });
+            } catch (e) {
+                // Fallback particle system
+                particles = this.add.particles(0, 0, 'player', {
+                    scale: { start: 0.05, end: 0 },
+                    speed: { min: 20, max: 50 },
+                    lifespan: 1000,
+                    quantity: 1,
+                    frequency: 2000
+                });
+            }
             
             // Create interactive markers for portfolio sections
             createEnhancedMarkers.call(this);
@@ -1040,8 +1077,15 @@
             ];
             
             markerData.forEach((data, index) => {
-                // Create marker with enhanced sprite
-                const marker = this.add.image(data.x, data.y, `marker_${index}`);
+                // Create marker with enhanced sprite or fallback
+                let marker;
+                try {
+                    marker = this.add.image(data.x, data.y, `marker_${index}`);
+                } catch (e) {
+                    // Fallback to colored circle
+                    const colors = [0x00d4ff, 0x2ecc71, 0xe74c3c, 0xf39c12, 0x9b59b6, 0x1abc9c];
+                    marker = this.add.circle(data.x, data.y, 20, colors[index]);
+                }
                 marker.setInteractive();
                 marker.setData('section', data.section);
                 marker.setScale(0.8);
