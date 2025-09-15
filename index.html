@@ -592,13 +592,13 @@
             return interval;
         }
 
-        // Game configuration - FIXED VERSION
+        // Game configuration - ENHANCED VERSION
         const config = {
             type: Phaser.AUTO,
-            width: 1000,
-            height: 700,
+            width: 1200,
+            height: 800,
             parent: 'game-canvas',
-            backgroundColor: '#2d5016',
+            backgroundColor: '#87CEEB',
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -622,140 +622,277 @@
             console.log('Preload function called');
         }
 
-        // Create game world - ENHANCED VERSION
+        // Create game world - COMPLEX 3D VERSION
         function create() {
-            console.log('Create function called - starting game world creation');
+            console.log('Create function called - starting complex game world creation');
             
-            // Create a simple background
-            this.add.rectangle(500, 350, 1000, 700, 0x2d5016);
-            console.log('Background created');
+            // Create world bounds
+            const worldWidth = 2400;
+            const worldHeight = 1600;
             
-            // Create grass pattern
-            for (let x = 0; x < 1000; x += 40) {
-                for (let y = 0; y < 700; y += 40) {
-                    const grass = this.add.rectangle(x + 20, y + 20, 40, 40, 0x4a7c59);
-                    grass.setAlpha(0.8 + Math.random() * 0.2);
+            // Create sky gradient background
+            const sky = this.add.graphics();
+            sky.fillGradientStyle(0x87CEEB, 0x87CEEB, 0x98D8E8, 0x98D8E8, 1);
+            sky.fillRect(0, 0, worldWidth, worldHeight);
+            console.log('Sky background created');
+            
+            // Create ground with grass texture
+            const ground = this.add.graphics();
+            ground.fillStyle(0x90EE90);
+            ground.fillRect(0, worldHeight - 400, worldWidth, 400);
+            
+            // Add grass pattern
+            for (let x = 0; x < worldWidth; x += 30) {
+                for (let y = worldHeight - 400; y < worldHeight; y += 30) {
+                    if (Math.random() < 0.7) {
+                        const grass = this.add.rectangle(x + 15, y + 15, 25, 25, 0x7CFC00);
+                        grass.setAlpha(0.6 + Math.random() * 0.4);
+                    }
                 }
             }
-            console.log('Grass pattern created');
+            console.log('Ground and grass created');
             
-            // Create roads
-            this.add.rectangle(500, 100, 1000, 20, 0x666666); // Horizontal road
-            this.add.rectangle(500, 600, 1000, 20, 0x666666); // Horizontal road
-            this.add.rectangle(100, 350, 20, 700, 0x666666); // Vertical road
-            this.add.rectangle(900, 350, 20, 700, 0x666666); // Vertical road
+            // Create roads with 3D effect
+            const roads = [
+                { x: worldWidth/2, y: 200, width: worldWidth, height: 40, color: 0x696969 },
+                { x: worldWidth/2, y: worldHeight - 200, width: worldWidth, height: 40, color: 0x696969 },
+                { x: 200, y: worldHeight/2, width: 40, height: worldHeight, color: 0x696969 },
+                { x: worldWidth - 200, y: worldHeight/2, width: 40, height: worldHeight, color: 0x696969 }
+            ];
+            
+            roads.forEach(road => {
+                // Main road
+                this.add.rectangle(road.x, road.y, road.width, road.height, road.color);
+                // Road lines
+                if (road.width > road.height) {
+                    for (let i = 0; i < road.width; i += 60) {
+                        this.add.rectangle(road.x - road.width/2 + i, road.y, 30, 4, 0xFFFFFF);
+                    }
+                } else {
+                    for (let i = 0; i < road.height; i += 60) {
+                        this.add.rectangle(road.x, road.y - road.height/2 + i, 4, 30, 0xFFFFFF);
+                    }
+                }
+            });
             console.log('Roads created');
             
-            // Create buildings
+            // Create complex buildings with 3D effect
             const buildings = [
-                { x: 200, y: 150, width: 80, height: 60, color: 0x8b4513, name: 'Office' },
-                { x: 400, y: 150, width: 100, height: 80, color: 0x654321, name: 'Tech Hub' },
-                { x: 600, y: 150, width: 90, height: 70, color: 0x8b4513, name: 'Studio' },
-                { x: 200, y: 450, width: 120, height: 100, color: 0x654321, name: 'Lab' },
-                { x: 500, y: 450, width: 110, height: 90, color: 0x8b4513, name: 'Workshop' },
-                { x: 700, y: 450, width: 100, height: 80, color: 0x654321, name: 'Library' }
+                { x: 300, y: 300, width: 120, height: 100, color: 0x8B4513, name: 'Research Lab', floors: 3 },
+                { x: 600, y: 250, width: 150, height: 120, color: 0x654321, name: 'Tech Hub', floors: 4 },
+                { x: 900, y: 350, width: 100, height: 80, color: 0x8B4513, name: 'Studio', floors: 2 },
+                { x: 1200, y: 400, width: 140, height: 110, color: 0x654321, name: 'AI Lab', floors: 3 },
+                { x: 300, y: 800, width: 160, height: 130, color: 0x8B4513, name: 'Data Center', floors: 4 },
+                { x: 600, y: 900, width: 130, height: 100, color: 0x654321, name: 'Workshop', floors: 2 },
+                { x: 900, y: 850, width: 120, height: 90, color: 0x8B4513, name: 'Library', floors: 3 },
+                { x: 1200, y: 900, width: 110, height: 80, color: 0x654321, name: 'Office', floors: 2 },
+                { x: 1500, y: 500, width: 180, height: 140, color: 0x8B4513, name: 'Innovation Center', floors: 5 },
+                { x: 1800, y: 700, width: 140, height: 120, color: 0x654321, name: 'Conference Hall', floors: 3 }
             ];
             
             buildings.forEach(building => {
-                const buildingRect = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
-                // Add building details
-                this.add.rectangle(building.x, building.y - 20, building.width - 20, 10, 0x000000); // Roof
-                this.add.rectangle(building.x - 30, building.y, 10, building.height, 0x654321); // Door
+                // Create 3D building effect
+                const mainBuilding = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
+                
+                // Add depth effect (darker side)
+                const depth = this.add.rectangle(building.x + 10, building.y + 10, building.width, building.height, building.color - 0x222222);
+                depth.setDepth(-1);
+                
+                // Add roof
+                const roof = this.add.rectangle(building.x, building.y - building.height/2 - 15, building.width + 20, 20, 0x2F4F4F);
+                
+                // Add windows
+                for (let i = 0; i < building.floors; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        const window = this.add.rectangle(
+                            building.x - building.width/3 + (j * building.width/3), 
+                            building.y - building.height/3 + (i * building.height/building.floors), 
+                            15, 20, 0x87CEEB
+                        );
+                        window.setAlpha(0.8);
+                    }
+                }
+                
+                // Add door
+                const door = this.add.rectangle(building.x, building.y + building.height/2 - 10, 20, 30, 0x654321);
+                
                 // Add building label
-                const label = this.add.text(building.x, building.y - 40, building.name, {
+                const label = this.add.text(building.x, building.y - building.height/2 - 40, building.name, {
+                    fontSize: '14px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 2
+                });
+                label.setOrigin(0.5);
+            });
+            console.log('Complex buildings created');
+            
+            // Create interactive NPCs with people shapes
+            const npcs = [
+                { x: 400, y: 400, color: 0x4169e1, name: 'Dr. Sarah Chen', role: 'AI Researcher', message: 'Welcome to our AI research lab! I work on Graph Neural Networks.' },
+                { x: 700, y: 350, color: 0xff6347, name: 'Mike Rodriguez', role: 'Tech Lead', message: 'Hey! I lead the development team here. Check out our latest projects!' },
+                { x: 1000, y: 450, color: 0x32cd32, name: 'Alex Johnson', role: 'Data Scientist', message: 'I specialize in quantitative analysis and machine learning. Want to see my work?' },
+                { x: 200, y: 850, color: 0xffd700, name: 'Prof. Martinez', role: 'Mentor', message: 'I mentor students in computer science. Looking for guidance?' },
+                { x: 800, y: 950, color: 0x9370db, name: 'Lisa Wang', role: 'Designer', message: 'I create beautiful user interfaces. Design is my passion!' },
+                { x: 1300, y: 1000, color: 0xff69b4, name: 'David Kim', role: 'Engineer', message: 'I build scalable systems and love solving complex problems!' }
+            ];
+            
+            npcs.forEach(npc => {
+                // Create person-shaped sprite
+                const person = this.add.graphics();
+                person.fillStyle(npc.color);
+                
+                // Head
+                person.fillCircle(0, -15, 12);
+                // Body
+                person.fillRect(-8, -5, 16, 25);
+                // Arms
+                person.fillRect(-15, 0, 8, 3);
+                person.fillRect(7, 0, 8, 3);
+                // Legs
+                person.fillRect(-6, 20, 5, 15);
+                person.fillRect(1, 20, 5, 15);
+                
+                person.x = npc.x;
+                person.y = npc.y;
+                
+                // Add name label
+                const nameLabel = this.add.text(npc.x, npc.y - 40, npc.name, {
                     fontSize: '12px',
                     fill: '#ffffff',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
                     strokeThickness: 1
                 });
-                label.setOrigin(0.5);
-            });
-            console.log('Buildings created');
-            
-            // Create plants and decorations
-            for (let i = 0; i < 20; i++) {
-                const x = Math.random() * 1000;
-                const y = Math.random() * 700;
-                if (x > 50 && x < 950 && y > 50 && y < 650) {
-                    const plant = this.add.circle(x, y, 8, 0x228b22);
-                    this.tweens.add({
-                        targets: plant,
-                        scaleX: 1.2,
-                        scaleY: 1.2,
-                        duration: 2000 + Math.random() * 2000,
-                        yoyo: true,
-                        repeat: -1
-                    });
-                }
-            }
-            console.log('Plants created');
-            
-            // Create NPCs
-            const npcs = [
-                { x: 300, y: 200, color: 0x4169e1, name: 'Developer' },
-                { x: 500, y: 300, color: 0xff6347, name: 'Designer' },
-                { x: 700, y: 400, color: 0x32cd32, name: 'Manager' },
-                { x: 150, y: 500, color: 0xffd700, name: 'Mentor' }
-            ];
-            
-            npcs.forEach(npc => {
-                const npcCircle = this.add.circle(npc.x, npc.y, 15, npc.color);
-                const npcLabel = this.add.text(npc.x, npc.y - 25, npc.name, {
+                nameLabel.setOrigin(0.5);
+                
+                // Add role label
+                const roleLabel = this.add.text(npc.x, npc.y - 55, npc.role, {
                     fontSize: '10px',
-                    fill: '#ffffff',
+                    fill: '#ffff00',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
                     strokeThickness: 1
                 });
-                npcLabel.setOrigin(0.5);
+                roleLabel.setOrigin(0.5);
                 
-                // Add NPC animation
+                // Make NPC interactive
+                person.setInteractive();
+                person.setData('npc', npc);
+                
+                // Add hover effect
+                person.on('pointerover', () => {
+                    person.setScale(1.1);
+                    nameLabel.setStyle({ fill: '#ffff00' });
+                });
+                
+                person.on('pointerout', () => {
+                    person.setScale(1.0);
+                    nameLabel.setStyle({ fill: '#ffffff' });
+                });
+                
+                // Add click interaction
+                person.on('pointerdown', () => {
+                    // Show NPC message
+                    const messageText = this.add.text(npc.x, npc.y - 80, npc.message, {
+                        fontSize: '11px',
+                        fill: '#ffffff',
+                        fontFamily: 'Courier New',
+                        stroke: '#000000',
+                        strokeThickness: 2,
+                        backgroundColor: '#000000',
+                        padding: { x: 10, y: 5 }
+                    });
+                    messageText.setOrigin(0.5);
+                    
+                    // Fade out message after 3 seconds
+                    this.tweens.add({
+                        targets: messageText,
+                        alpha: 0,
+                        duration: 3000,
+                        onComplete: () => messageText.destroy()
+                    });
+                });
+                
+                // Add walking animation
                 this.tweens.add({
-                    targets: npcCircle,
-                    y: npc.y - 5,
-                    duration: 3000 + Math.random() * 2000,
+                    targets: person,
+                    x: npc.x + (Math.random() - 0.5) * 100,
+                    duration: 5000 + Math.random() * 5000,
                     yoyo: true,
-                    repeat: -1
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
                 });
             });
-            console.log('NPCs created');
+            console.log('Interactive NPCs created');
             
-            // Create player - BIG RED CIRCLE (NO PHYSICS)
-            player = this.add.circle(100, 100, 25, 0xff0000);
+            // Create player with person shape
+            player = this.add.graphics();
+            player.fillStyle(0xff0000);
+            
+            // Head
+            player.fillCircle(0, -15, 12);
+            // Body
+            player.fillRect(-8, -5, 16, 25);
+            // Arms
+            player.fillRect(-15, 0, 8, 3);
+            player.fillRect(7, 0, 8, 3);
+            // Legs
+            player.fillRect(-6, 20, 5, 15);
+            player.fillRect(1, 20, 5, 15);
+            
+            player.x = 100;
+            player.y = 100;
             console.log('Player created at position:', player.x, player.y);
             
             // Add player animation
             this.tweens.add({
                 targets: player,
-                scaleX: 1.1,
-                scaleY: 1.1,
-                duration: 1000,
+                scaleX: 1.05,
+                scaleY: 1.05,
+                duration: 2000,
                 yoyo: true,
                 repeat: -1
             });
             console.log('Player animation added');
             
-            // Create interactive markers with proper data
+            // Create interactive markers with people shapes
             const markerData = [
-                { x: 200, y: 200, color: 0x00ff00, section: 'about', name: 'About Me' },
-                { x: 500, y: 300, color: 0x0000ff, section: 'projects', name: 'Projects' },
-                { x: 800, y: 500, color: 0xff00ff, section: 'resume', name: 'Resume' },
-                { x: 300, y: 500, color: 0xffff00, section: 'skills', name: 'Skills' },
-                { x: 700, y: 200, color: 0xff8000, section: 'awards', name: 'Awards' },
-                { x: 100, y: 400, color: 0x00ffff, section: 'contact', name: 'Contact' }
+                { x: 300, y: 200, color: 0x00ff00, section: 'about', name: 'About Me' },
+                { x: 600, y: 300, color: 0x0000ff, section: 'projects', name: 'Projects' },
+                { x: 1000, y: 500, color: 0xff00ff, section: 'resume', name: 'Resume' },
+                { x: 400, y: 800, color: 0xffff00, section: 'skills', name: 'Skills' },
+                { x: 800, y: 200, color: 0xff8000, section: 'awards', name: 'Awards' },
+                { x: 200, y: 600, color: 0x00ffff, section: 'contact', name: 'Contact' }
             ];
             
             markers = markerData.map(data => {
-                const marker = this.add.circle(data.x, data.y, 20, data.color);
+                // Create person-shaped marker
+                const marker = this.add.graphics();
+                marker.fillStyle(data.color);
+                
+                // Head
+                marker.fillCircle(0, -10, 8);
+                // Body
+                marker.fillRect(-6, -2, 12, 15);
+                // Arms
+                marker.fillRect(-10, 2, 5, 2);
+                marker.fillRect(5, 2, 5, 2);
+                // Legs
+                marker.fillRect(-4, 13, 3, 10);
+                marker.fillRect(1, 13, 3, 10);
+                
+                marker.x = data.x;
+                marker.y = data.y;
                 marker.setData('section', data.section);
                 marker.setData('name', data.name);
                 
                 // Add pulsing animation
                 this.tweens.add({
                     targets: marker,
-                    scaleX: 1.3,
-                    scaleY: 1.3,
+                    scaleX: 1.2,
+                    scaleY: 1.2,
                     duration: 1500,
                     yoyo: true,
                     repeat: -1
@@ -771,9 +908,12 @@
                 });
                 label.setOrigin(0.5);
                 
+                // Make interactive
+                marker.setInteractive();
+                
                 // Add hover effects
                 marker.on('pointerover', () => {
-                    marker.setScale(1.2);
+                    marker.setScale(1.3);
                     label.setStyle({ fill: '#ffff00', stroke: '#000000', strokeThickness: 3 });
                 });
                 
@@ -784,7 +924,13 @@
                 
                 return marker;
             });
-            console.log('Markers created');
+            console.log('Interactive markers created');
+            
+            // Set up camera to follow player
+            this.cameras.main.startFollow(player);
+            this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
+            this.cameras.main.setZoom(0.8);
+            console.log('Camera setup completed');
             
             // Set up input
             cursors = this.input.keyboard.createCursorKeys();
@@ -809,15 +955,15 @@
                 if (player) {
                     this.tweens.add({
                         targets: player,
-                        x: pointer.x,
-                        y: pointer.y,
+                        x: pointer.worldX,
+                        y: pointer.worldY,
                         duration: 1000,
                         ease: 'Power2.easeOut'
                     });
                 }
             });
             
-            console.log('Game world creation completed successfully!');
+            console.log('Complex game world creation completed successfully!');
         }
 
         // Update game loop
@@ -825,7 +971,7 @@
             if (!player) return;
             
             // Player movement
-            const speed = 200;
+            const speed = 300;
             
             if (cursors.left.isDown || wasd.A.isDown) {
                 player.x -= speed * this.game.loop.delta / 1000;
@@ -840,21 +986,21 @@
                 player.y += speed * this.game.loop.delta / 1000;
             }
             
-            // Manual boundary checking (replaces setCollideWorldBounds)
+            // Manual boundary checking for larger world
             if (player.x < 30) player.x = 30;
-            if (player.x > 970) player.x = 970;
+            if (player.x > 2370) player.x = 2370;
             if (player.y < 30) player.y = 30;
-            if (player.y > 670) player.y = 670;
+            if (player.y > 1570) player.y = 1570;
             
             // Check for marker interactions
             markers.forEach(marker => {
                 const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
-                if (distance < 50) {
+                if (distance < 60) {
                     // Player is close to marker
                     marker.setAlpha(0.8);
                     
                     // Auto-trigger interaction if close enough
-                    if (distance < 30) {
+                    if (distance < 40) {
                         const section = marker.getData('section');
                         if (section && !currentOverlay) {
                             console.log('Auto-triggering interaction with:', section);
@@ -868,7 +1014,7 @@
             });
             
             // Check for random interactions (buildings, NPCs, etc.)
-            if (Math.random() < 0.001) { // 0.1% chance per frame
+            if (Math.random() < 0.0005) { // 0.05% chance per frame
                 const randomMessages = [
                     "You found a hidden easter egg! 🎉",
                     "The wind whispers secrets of code...",
@@ -879,7 +1025,12 @@
                     "You feel inspired to code something new!",
                     "The buildings seem to pulse with energy.",
                     "A shooting star crosses the sky above.",
-                    "You discover a new programming technique!"
+                    "You discover a new programming technique!",
+                    "The AI Lab hums with activity...",
+                    "You notice a new building under construction.",
+                    "A friendly NPC waves at you from across the street.",
+                    "The Innovation Center glows with possibilities.",
+                    "You feel the energy of the tech community around you."
                 ];
                 
                 const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
@@ -891,7 +1042,9 @@
                     fill: '#ffff00',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
-                    strokeThickness: 2
+                    strokeThickness: 2,
+                    backgroundColor: '#000000',
+                    padding: { x: 10, y: 5 }
                 });
                 messageText.setOrigin(0.5);
                 
@@ -900,7 +1053,7 @@
                     targets: messageText,
                     alpha: 0,
                     y: messageText.y - 30,
-                    duration: 3000,
+                    duration: 4000,
                     onComplete: () => messageText.destroy()
                 });
             }
