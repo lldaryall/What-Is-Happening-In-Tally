@@ -522,7 +522,7 @@
             console.log('Preload function called');
         }
 
-        // Create game world - WORKING VERSION
+        // Create game world - FIXED VERSION
         function create() {
             console.log('Create function called - starting game world creation');
             
@@ -538,9 +538,8 @@
             }
             console.log('Grass pattern created');
             
-            // Create player - BIG RED CIRCLE
+            // Create player - BIG RED CIRCLE (NO PHYSICS)
             player = this.add.circle(100, 100, 30, 0xff0000);
-            player.setCollideWorldBounds(true);
             console.log('Player created at position:', player.x, player.y);
             
             // Add player animation
@@ -634,6 +633,12 @@
             if (cursors.down.isDown || wasd.S.isDown) {
                 player.y += speed * this.game.loop.delta / 1000;
             }
+            
+            // Manual boundary checking (replaces setCollideWorldBounds)
+            if (player.x < 30) player.x = 30;
+            if (player.x > 970) player.x = 970;
+            if (player.y < 30) player.y = 30;
+            if (player.y > 670) player.y = 670;
         }
 
         // Open overlay for specific section
