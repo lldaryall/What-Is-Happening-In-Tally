@@ -452,7 +452,8 @@
 
         <!-- Instructions -->
         <div class="instructions" id="instructions" style="display: none;">
-            Walk to the colored markers to explore my portfolio sections
+            <div>Use WASD/Arrow Keys to move • Click to move • SPACE to jump • ESC for menu</div>
+            <div>Walk to the glowing markers to explore my portfolio sections</div>
         </div>
 
         <!-- Menu Overlay -->
@@ -491,21 +492,21 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">My Projects</h2>
                 <div class="overlay-text">
-                    <div class="project-item">
+                <div class="project-item">
                         <div class="project-title">Interactive Portfolio Website</div>
                         <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around. This project showcases my ability to create engaging user experiences using modern web technologies.</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Coppola Artistica Website</div>
                         <p>A modern web application built with React and modern web technologies. Features responsive design, interactive elements, and optimized performance for showcasing artistic work.</p>
                         <p><strong>Technologies:</strong> React, JavaScript, HTML5, CSS3</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">C++ Projects Collection</div>
                         <p>A comprehensive collection of C++ projects demonstrating various programming concepts, algorithms, and data structures. Includes projects ranging from basic programming exercises to complex system implementations.</p>
                         <p><strong>Technologies:</strong> C++, Data Structures, Algorithms</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Web Development Projects</div>
                         <p>Various web applications and websites built using modern frameworks and technologies. Includes responsive designs, interactive features, and optimized user experiences.</p>
                         <p><strong>Technologies:</strong> JavaScript, HTML5, CSS3, React, Node.js</p>
@@ -520,7 +521,7 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Resume & Experience</h2>
                 <div class="overlay-text">
-                    <h3>Experience</h3>
+                <h3>Experience</h3>
                     <p><strong>Full Stack Developer</strong> - Freelance (2020-Present)</p>
                     <p>Developing web applications and interactive experiences using modern technologies. Specializing in React, JavaScript, and C++ development.</p>
                     
@@ -588,18 +589,18 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Awards & Certifications</h2>
                 <div class="overlay-text">
-                    <div class="project-item">
+                <div class="project-item">
                         <div class="project-title">Interactive Portfolio Recognition</div>
                         <p>Created an innovative game-style portfolio that demonstrates creativity and technical skills in web development and game design.</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">Web Development Projects</div>
                         <p>Successfully developed and deployed multiple web applications including the Coppola Artistica website, showcasing proficiency in modern web technologies.</p>
-                    </div>
-                    <div class="project-item">
+                </div>
+                <div class="project-item">
                         <div class="project-title">C++ Programming Excellence</div>
                         <p>Demonstrated strong programming skills through various C++ projects, showcasing understanding of data structures, algorithms, and software engineering principles.</p>
-                    </div>
+                </div>
                     <div class="project-item">
                         <div class="project-title">Continuous Learning</div>
                         <p>Committed to ongoing education and skill development, staying current with the latest technologies and best practices in software development.</p>
@@ -671,7 +672,7 @@
                 'Setting up animations',
                 'Almost ready...'
             ];
-            let messageIndex = 0;
+        let messageIndex = 0;
             let dotCount = 0;
             
             const interval = setInterval(() => {
@@ -686,25 +687,25 @@
         }
 
         // Enhanced game configuration
-        const config = {
-            type: Phaser.AUTO,
+                const config = {
+                    type: Phaser.AUTO,
             width: 1200,
             height: 800,
             parent: 'game-canvas',
             backgroundColor: '#0a0a0a',
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    gravity: { y: 0 },
-                    debug: false
-                }
-            },
-            scene: {
-                preload: preload,
-                create: create,
-                update: update
-            },
-            scale: {
+                    physics: {
+                        default: 'arcade',
+                        arcade: {
+                            gravity: { y: 0 },
+                            debug: false
+                        }
+                    },
+                    scene: {
+                        preload: preload,
+                        create: create,
+                        update: update
+                    },
+                    scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
                 width: 1200,
@@ -712,10 +713,10 @@
             }
         };
 
-        // Create enhanced sprite graphics
-        function createSprites() {
+        // Preload assets
+        function preload() {
             // Create grass texture
-            const grassTexture = game.textures.createCanvas('grass', 32, 32);
+            const grassTexture = this.textures.createCanvas('grass', 32, 32);
             const grassCtx = grassTexture.getContext();
             const grassGradient = grassCtx.createLinearGradient(0, 0, 32, 32);
             grassGradient.addColorStop(0, '#4a7c59');
@@ -732,7 +733,7 @@
             grassTexture.refresh();
 
             // Create water texture
-            const waterTexture = game.textures.createCanvas('water', 32, 32);
+            const waterTexture = this.textures.createCanvas('water', 32, 32);
             const waterCtx = waterTexture.getContext();
             const waterGradient = waterCtx.createLinearGradient(0, 0, 32, 32);
             waterGradient.addColorStop(0, '#4a90e2');
@@ -749,7 +750,7 @@
             waterTexture.refresh();
 
             // Create wall texture
-            const wallTexture = game.textures.createCanvas('wall', 32, 32);
+            const wallTexture = this.textures.createCanvas('wall', 32, 32);
             const wallCtx = wallTexture.getContext();
             wallCtx.fillStyle = '#8b4513';
             wallCtx.fillRect(0, 0, 32, 32);
@@ -765,7 +766,7 @@
             wallTexture.refresh();
 
             // Create player sprite
-            const playerTexture = game.textures.createCanvas('player', 24, 24);
+            const playerTexture = this.textures.createCanvas('player', 24, 24);
             const playerCtx = playerTexture.getContext();
             
             // Player body
@@ -791,7 +792,7 @@
             // Create marker sprites
             const markerColors = [0x00d4ff, 0x2ecc71, 0xe74c3c, 0xf39c12, 0x9b59b6, 0x1abc9c];
             markerColors.forEach((color, index) => {
-                const markerTexture = game.textures.createCanvas(`marker_${index}`, 40, 40);
+                const markerTexture = this.textures.createCanvas(`marker_${index}`, 40, 40);
                 const markerCtx = markerTexture.getContext();
                 
                 // Outer glow
@@ -818,22 +819,46 @@
             });
         }
 
-        // Preload assets
-        function preload() {
-            // Create enhanced sprites
-            createSprites();
-        }
-
         // Create enhanced game world
         function create() {
-            // Create animated background
+            // Create animated background with stars
             this.add.rectangle(0, 0, 2400, 1800, 0x0a0a0a);
+            
+            // Add animated stars background
+            for (let i = 0; i < 200; i++) {
+                const star = this.add.circle(
+                    Math.random() * 2400, 
+                    Math.random() * 1800, 
+                    Math.random() * 2 + 0.5, 
+                    0xffffff, 
+                    Math.random() * 0.8 + 0.2
+                );
+                
+                this.tweens.add({
+                    targets: star,
+                    alpha: 0.2,
+                    duration: Math.random() * 3000 + 1000,
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
             
             // Create grass tiles
             for (let x = 0; x < 2400; x += 32) {
                 for (let y = 0; y < 1800; y += 32) {
                     const grass = this.add.image(x, y, 'grass');
                     grass.setOrigin(0, 0);
+                    
+                    // Add subtle grass animation
+                    if (Math.random() < 0.1) {
+                        this.tweens.add({
+                            targets: grass,
+                            alpha: 0.8,
+                            duration: 2000,
+                            yoyo: true,
+                            repeat: -1
+                        });
+                    }
                 }
             }
             
@@ -879,13 +904,28 @@
             player = this.add.image(200, 200, 'player');
             player.setCollideWorldBounds(true);
             
-            // Add player animation
+            // Add player breathing animation
             this.tweens.add({
                 targets: player,
-                scaleX: 1.1,
-                duration: 1000,
+                scaleX: 1.05,
+                scaleY: 1.05,
+                duration: 2000,
                 yoyo: true,
                 repeat: -1
+            });
+            
+            // Add player trail effect
+            const trail = this.add.particles(player.x, player.y, 'player', {
+                scale: { start: 0.3, end: 0 },
+                speed: { min: 10, max: 30 },
+                lifespan: 1000,
+                quantity: 2,
+                frequency: 100
+            });
+            
+            // Update trail position
+            this.events.on('update', () => {
+                trail.setPosition(player.x, player.y);
             });
             
             // Set up camera to follow player
@@ -904,11 +944,11 @@
             
             // Create interactive markers for portfolio sections
             createEnhancedMarkers.call(this);
-            
+
             // Set up input
             cursors = this.input.keyboard.createCursorKeys();
             wasd = this.input.keyboard.addKeys('W,S,A,D');
-            
+
             // Add keyboard shortcuts
             this.input.keyboard.on('keydown-ESC', () => {
                 if (currentOverlay) {
@@ -919,11 +959,66 @@
                 }
             });
             
-            // Hide loading screen and show intro
-            setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('intro-screen').style.display = 'flex';
-            }, 3000);
+            // Add spacebar to jump/boost
+            this.input.keyboard.on('keydown-SPACE', () => {
+                if (player) {
+                    // Add jump effect
+                    this.tweens.add({
+                        targets: player,
+                        y: player.y - 20,
+                        duration: 200,
+                        yoyo: true,
+                        ease: 'Back.easeOut'
+                    });
+                    
+                    // Create jump particles
+                    const jumpParticles = this.add.particles(player.x, player.y + 20, 'player', {
+                        scale: { start: 0.2, end: 0 },
+                        speed: { min: 50, max: 100 },
+                        lifespan: 500,
+                        quantity: 5,
+                        angle: { min: 250, max: 290 }
+                    });
+                    
+                    setTimeout(() => {
+                        jumpParticles.destroy();
+                    }, 1000);
+                }
+            });
+            
+            // Add mouse/touch controls
+            this.input.on('pointerdown', (pointer) => {
+                if (player && !currentOverlay) {
+                    const targetX = pointer.worldX;
+                    const targetY = pointer.worldY;
+                    
+                    // Move player towards click
+                    this.tweens.add({
+                        targets: player,
+                        x: targetX,
+                        y: targetY,
+                        duration: 1000,
+                        ease: 'Power2.easeOut'
+                    });
+                    
+                    // Create movement particles
+                    const moveParticles = this.add.particles(player.x, player.y, 'player', {
+                        scale: { start: 0.1, end: 0 },
+                        speed: { min: 20, max: 40 },
+                        lifespan: 800,
+                        quantity: 3,
+                        frequency: 50
+                    });
+                    
+                    setTimeout(() => {
+                        moveParticles.destroy();
+                    }, 2000);
+                }
+            });
+            
+            // Hide loading screen and show intro immediately after assets are loaded
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'flex';
         }
 
         // Create enhanced interactive markers
@@ -947,11 +1042,21 @@
                 // Add pulsing animation
                 this.tweens.add({
                     targets: marker,
-                    scaleX: 1.2,
-                    scaleY: 1.2,
-                    duration: 1500,
+                    scaleX: 1.3,
+                    scaleY: 1.3,
+                    duration: 2000,
                     yoyo: true,
-                    repeat: -1
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+                
+                // Add rotation animation
+                this.tweens.add({
+                    targets: marker,
+                    angle: 360,
+                    duration: 10000,
+                    repeat: -1,
+                    ease: 'Linear'
                 });
                 
                 // Add text label with better styling
@@ -973,14 +1078,26 @@
                 
                 // Add hover effects
                 marker.on('pointerover', () => {
-                    marker.setScale(1.0);
-                    text.setScale(1.2);
-                    icon.setScale(1.2);
+                    marker.setScale(1.2);
+                    text.setScale(1.3);
+                    icon.setScale(1.3);
+                    text.setStyle({ fill: '#00d4ff', stroke: '#000000', strokeThickness: 3 });
+                    
+                    // Add glow effect
                     this.tweens.add({
-                        targets: [marker, text, icon],
-                        alpha: 0.8,
+                        targets: marker,
+                        alpha: 0.9,
+                        duration: 300,
+                        yoyo: true,
+                        repeat: 1
+                    });
+                    
+                    // Add bounce effect
+                    this.tweens.add({
+                        targets: [text, icon],
+                        y: data.y - 50,
                         duration: 200,
-                        yoyo: true
+                        ease: 'Back.easeOut'
                     });
                 });
                 
@@ -988,18 +1105,48 @@
                     marker.setScale(0.8);
                     text.setScale(1.0);
                     icon.setScale(1.0);
+                    text.setStyle({ fill: '#ffffff', stroke: '#000000', strokeThickness: 2 });
+                    
+                    // Reset position
+                    this.tweens.add({
+                        targets: [text, icon],
+                        y: data.y - 40,
+                        duration: 200,
+                        ease: 'Back.easeOut'
+                    });
                 });
                 
                 // Add click handler with particle effect
                 marker.on('pointerdown', () => {
                     // Create particle burst
                     particles.setPosition(data.x, data.y);
-                    particles.explode(10);
+                    particles.explode(15);
+                    
+                    // Add click animation
+                    this.tweens.add({
+                        targets: marker,
+                        scaleX: 1.5,
+                        scaleY: 1.5,
+                        duration: 100,
+                        yoyo: true,
+                        onComplete: () => {
+                            this.tweens.add({
+                                targets: marker,
+                                scaleX: 0.8,
+                                scaleY: 0.8,
+                                duration: 200,
+                                ease: 'Back.easeOut'
+                            });
+                        }
+                    });
+                    
+                    // Add screen shake effect
+                    this.cameras.main.shake(200, 0.01);
                     
                     // Open overlay with delay for effect
                     setTimeout(() => {
                         openOverlay(data.section);
-                    }, 300);
+                    }, 500);
                 });
                 
                 markers.push(marker);
@@ -1009,33 +1156,64 @@
         // Enhanced update game loop
         function update() {
             if (!player) return;
-            
+
             // Player movement with momentum
             const speed = 300;
-            const friction = 0.8;
-            
+            let isMoving = false;
+
             if (cursors.left.isDown || wasd.A.isDown) {
                 player.x -= speed * this.game.loop.delta / 1000;
                 player.setFlipX(true);
+                isMoving = true;
             }
             if (cursors.right.isDown || wasd.D.isDown) {
                 player.x += speed * this.game.loop.delta / 1000;
                 player.setFlipX(false);
+                isMoving = true;
             }
             if (cursors.up.isDown || wasd.W.isDown) {
                 player.y -= speed * this.game.loop.delta / 1000;
+                isMoving = true;
             }
             if (cursors.down.isDown || wasd.S.isDown) {
                 player.y += speed * this.game.loop.delta / 1000;
+                isMoving = true;
+            }
+            
+            // Add movement particles when moving
+            if (isMoving && Math.random() < 0.3) {
+                const moveParticle = this.add.particles(player.x, player.y, 'player', {
+                    scale: { start: 0.05, end: 0 },
+                    speed: { min: 10, max: 30 },
+                    lifespan: 500,
+                    quantity: 1,
+                    angle: { min: 0, max: 360 }
+                });
+                
+                setTimeout(() => {
+                    moveParticle.destroy();
+                }, 1000);
             }
             
             // Check for marker interactions with enhanced feedback
             markers.forEach(marker => {
                 const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
-                if (distance < 80) {
+                if (distance < 100) {
                     // Player is near marker - add visual feedback
                     marker.setTint(0xffffff);
                     marker.setAlpha(0.9);
+                    
+                    // Add pulsing effect when near
+                    if (distance < 60) {
+                        this.tweens.add({
+                            targets: marker,
+                            scaleX: 1.4,
+                            scaleY: 1.4,
+                            duration: 500,
+                            yoyo: true,
+                            ease: 'Sine.easeInOut'
+                        });
+                    }
                 } else {
                     marker.clearTint();
                     marker.setAlpha(1);
@@ -1080,10 +1258,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Start enhanced loading animation
             const loadingInterval = animateLoading();
-            
+
             // Play button
             document.getElementById('play-button').addEventListener('click', startGame);
-            
+
             // Menu button
             document.getElementById('menu-button').addEventListener('click', function() {
                 document.getElementById('menu-overlay').style.display = 'flex';
@@ -1091,7 +1269,7 @@
                     game.scene.pause();
                 }
             });
-            
+
             // Menu section buttons
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1100,12 +1278,12 @@
                     openOverlay(section);
                 });
             });
-            
+
             // Close overlay buttons
             document.querySelectorAll('.overlay-close').forEach(btn => {
                 btn.addEventListener('click', closeOverlay);
             });
-            
+
             // Close overlays when clicking outside
             document.querySelectorAll('.overlay').forEach(overlay => {
                 overlay.addEventListener('click', function(e) {
@@ -1114,12 +1292,12 @@
                     }
                 });
             });
-            
+
             // Close menu when clicking outside
             document.getElementById('menu-overlay').addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.style.display = 'none';
-                    if (game) {
+                if (game) {
                         game.scene.resume();
                     }
                 }
