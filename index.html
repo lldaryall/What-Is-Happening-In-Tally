@@ -423,6 +423,7 @@
             <div class="loading-progress">
                 <div class="loading-bar"></div>
             </div>
+            <div style="margin-top: 2rem; color: #cccccc; font-size: 0.9rem; cursor: pointer;" id="skip-loading">Click to skip loading</div>
         </div>
 
         <!-- Mobile Message -->
@@ -683,6 +684,14 @@
                     messageIndex = (messageIndex + 1) % messages.length;
                 }
             }, 800);
+            
+            // Auto-hide loading screen after 3 seconds
+            setTimeout(() => {
+                clearInterval(interval);
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'flex';
+            }, 3000);
+            
             return interval;
         }
 
@@ -1016,9 +1025,7 @@
                 }
             });
             
-            // Hide loading screen and show intro immediately after assets are loaded
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('intro-screen').style.display = 'flex';
+            // Game is ready - loading screen will be hidden by the timer
         }
 
         // Create enhanced interactive markers
@@ -1257,8 +1264,22 @@
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Start enhanced loading animation
-            const loadingInterval = animateLoading();
+            animateLoading();
+            
+            // Fallback: Force hide loading screen after 5 seconds
+                    setTimeout(() => {
+                if (document.getElementById('loading-screen').style.display !== 'none') {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('intro-screen').style.display = 'flex';
+                }
+            }, 5000);
 
+            // Skip loading button
+            document.getElementById('skip-loading').addEventListener('click', function() {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'flex';
+            });
+            
             // Play button
             document.getElementById('play-button').addEventListener('click', startGame);
 
