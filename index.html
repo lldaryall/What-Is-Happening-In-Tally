@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Portfolio</title>
+    <title>Darya Pylypenko - Interactive Portfolio</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,32 +14,35 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: #1a1a2e;
+            background: #1a1a1a;
             overflow: hidden;
-            color: #fff;
+            color: #ffffff;
         }
 
         #game-container {
+            position: relative;
             width: 100vw;
             height: 100vh;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        canvas {
-            display: block;
+        #game-canvas {
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            border: 2px solid #2779a7;
         }
 
         /* Loading Screen */
-        #loading-screen {
+        .loading-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -46,157 +50,173 @@
             z-index: 1000;
         }
 
-        #loading-text {
-            font-size: 2rem;
-            color: #2779a7;
+        .loading-text {
+            font-size: 2.5rem;
+            color: #00d4ff;
             margin-bottom: 2rem;
             text-align: center;
+            animation: pulse 2s infinite;
+            text-shadow: 0 0 20px #00d4ff;
+            font-weight: bold;
         }
 
-        #loading-bar {
+        .loading-dots {
+            font-size: 1.5rem;
+            color: #ffffff;
+            animation: blink 1s infinite;
+        }
+
+        .loading-progress {
             width: 300px;
-            height: 20px;
-            border: 2px solid #2779a7;
-            border-radius: 10px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 2rem;
             overflow: hidden;
-            background: rgba(39, 121, 167, 0.2);
         }
 
-        #loading-progress {
+        .loading-bar {
             height: 100%;
-            background: linear-gradient(90deg, #2779a7, #4a9eff);
+            background: linear-gradient(90deg, #00d4ff, #ff6b6b);
             width: 0%;
-            transition: width 0.3s ease;
+            animation: loading 3s ease-in-out;
         }
 
-        #loading-messages {
-            margin-top: 1rem;
-            font-size: 1rem;
-            color: #888;
-            text-align: center;
-            min-height: 1.5rem;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
 
         /* Intro Screen */
-        #intro-screen {
+        .intro-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 999;
+            overflow: hidden;
         }
 
-        #intro-title {
-            font-size: 3rem;
-            color: #2779a7;
+        .intro-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="0.5" fill="%23ffffff" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+            animation: twinkle 3s infinite;
+        }
+
+        .intro-title {
+            font-size: 4rem;
+            color: #00d4ff;
             margin-bottom: 1rem;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 0 30px #00d4ff, 0 0 60px #00d4ff;
+            font-weight: bold;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 1;
         }
 
-        #intro-subtitle {
-            font-size: 1.5rem;
-            color: #4a9eff;
+        .intro-subtitle {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-align: center;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro-description {
+            font-size: 1.2rem;
+            color: #cccccc;
             margin-bottom: 3rem;
             text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
         }
 
-        #play-button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, #2779a7, #4a9eff);
+        .play-button {
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b);
             color: white;
             border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 20px 40px;
+            font-size: 1.8rem;
             font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+            position: relative;
+            z-index: 1;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        #play-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(39, 121, 167, 0.4);
+        .play-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.5);
+            background: linear-gradient(45deg, #ff6b6b, #00d4ff);
+        }
+
+        .play-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 30px #00d4ff, 0 0 60px #00d4ff; }
+            100% { text-shadow: 0 0 40px #00d4ff, 0 0 80px #00d4ff, 0 0 120px #00d4ff; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
         /* Menu Button */
-        #menu-button {
+        .menu-button {
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            background: rgba(39, 121, 167, 0.8);
+            background: #2779a7;
             color: white;
             border: none;
-            border-radius: 20px;
-            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 1rem;
             font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 5px;
             z-index: 100;
             transition: all 0.3s ease;
         }
 
-        #menu-button:hover {
-            background: rgba(39, 121, 167, 1);
-            transform: scale(1.05);
+        .menu-button:hover {
+            background: #1e5a7a;
         }
 
-        /* Menu Overlay */
-        #menu-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 998;
-        }
-
-        #menu-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid #2779a7;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        #menu-title {
-            font-size: 2rem;
-            color: #2779a7;
-            margin-bottom: 2rem;
-        }
-
-        .menu-item {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(39, 121, 167, 0.3);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-        }
-
-        .menu-item:hover {
-            background: rgba(39, 121, 167, 0.6);
-            transform: translateX(5px);
-        }
-
-        /* Section Overlays */
+        /* Overlay Styles */
         .overlay {
             position: absolute;
             top: 0;
@@ -207,862 +227,910 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 997;
+            z-index: 200;
         }
 
         .overlay-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: #2d2d2d;
             padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid #2779a7;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
             overflow-y: auto;
-            position: relative;
+            border: 2px solid #2779a7;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .overlay-header {
+            color: #2779a7;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
         .overlay-close {
             position: absolute;
-            top: 15px;
+            top: 10px;
             right: 15px;
-            background: #ff4757;
-            color: white;
+            background: none;
             border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            color: #ffffff;
+            font-size: 2rem;
             cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: bold;
         }
 
         .overlay-close:hover {
-            background: #ff3742;
-            transform: scale(1.1);
+            color: #ff6b6b;
         }
 
-        .overlay h2 {
-            color: #2779a7;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-        }
-
-        .overlay h3 {
-            color: #4a9eff;
-            margin: 1.5rem 0 0.5rem 0;
-            font-size: 1.3rem;
-        }
-
-        .overlay p, .overlay li {
-            margin-bottom: 0.8rem;
+        .overlay-text {
+            color: #ffffff;
             line-height: 1.6;
-        }
-
-        .overlay ul {
-            margin-left: 1.5rem;
+            font-size: 1rem;
         }
 
         .project-item {
-            background: rgba(39, 121, 167, 0.1);
+            background: #1a1a1a;
             padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 8px;
+            margin: 0.5rem 0;
+            border-radius: 5px;
             border-left: 4px solid #2779a7;
         }
 
         .project-title {
-            color: #4a9eff;
-            font-weight: bold;
+            color: #2779a7;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
         }
 
-        .skill-tag {
+        .skill-item {
             display: inline-block;
-            background: rgba(39, 121, 167, 0.3);
-            padding: 5px 10px;
-            margin: 3px;
-            border-radius: 15px;
+            background: #2779a7;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border-radius: 20px;
             font-size: 0.9rem;
         }
 
-        /* Mobile Support */
-        @media (max-width: 768px) {
-            #intro-title {
-                font-size: 2rem;
-            }
-            
-            #intro-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .overlay-content {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
-            
-            #menu-content {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
-        }
-
-        @media (max-height: 500px) {
-            #intro-title {
-                font-size: 2rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            #intro-subtitle {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-        }
-
-        /* Mobile rotation message */
-        #mobile-message {
+        /* Mobile Responsiveness */
+        .mobile-message {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: #1a1a1a;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1001;
-            text-align: center;
-            padding: 2rem;
         }
 
-        #mobile-message h2 {
+        .mobile-message h2 {
+            color: #2779a7;
+                font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .mobile-message p {
+            color: #ffffff;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+        }
+
+        .menu-content {
+            background: #2d2d2d;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #2779a7;
+            text-align: center;
+        }
+
+        .menu-title {
             color: #2779a7;
             font-size: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
-        #mobile-message p {
-            color: #4a9eff;
-            font-size: 1.2rem;
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
 
-        /* Instructions */
-        #instructions {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            color: #888;
-            z-index: 100;
-        }
-
-        /* Interactive zone indicators */
-        .zone-indicator {
-            position: absolute;
-            background: rgba(39, 121, 167, 0.3);
-            border: 2px dashed #2779a7;
-            border-radius: 5px;
-            pointer-events: none;
-            z-index: 50;
-            display: none;
-        }
-
-        .zone-label {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
+        .menu-btn {
             background: #2779a7;
             color: white;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            white-space: nowrap;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
         }
 
-        /* Debug info */
-        #debug-info {
+        .menu-btn:hover {
+            background: #1e5a7a;
+            transform: translateY(-2px);
+        }
+
+        /* Game UI */
+        .game-ui {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            color: #fff;
-            z-index: 1000;
-            display: none;
+            color: #ffffff;
+            font-size: 1rem;
+            z-index: 50;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-align: center;
+            z-index: 50;
+        }
+
+        @media (max-width: 768px) {
+            .intro-title {
+                font-size: 2rem;
+            }
+            
+            .intro-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .overlay-content {
+                max-width: 95%;
+                padding: 1rem;
+            }
+            
+            .overlay-header {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div id="game-container">
         <!-- Loading Screen -->
-        <div id="loading-screen">
-            <div id="loading-text">Loading Portfolio...</div>
-            <div id="loading-bar">
-                <div id="loading-progress"></div>
+        <div class="loading-screen" id="loading-screen">
+            <div class="loading-text">Loading Portfolio...</div>
+            <div class="loading-dots" id="loading-dots">Preparing interactive experience</div>
+            <div class="loading-progress">
+                <div class="loading-bar"></div>
             </div>
-            <div id="loading-messages">Preparing your adventure...</div>
-        </div>
-
-        <!-- Intro Screen -->
-        <div id="intro-screen">
-            <h1 id="intro-title">Your Name</h1>
-            <p id="intro-subtitle">Interactive Portfolio</p>
-            <button id="play-button">Play</button>
         </div>
 
         <!-- Mobile Message -->
-        <div id="mobile-message">
-            <h2>Rotate Your Device</h2>
-            <p>Please rotate your device to landscape mode for the best experience</p>
+        <div class="mobile-message" id="mobile-message">
+            <h2>Rotate Device</h2>
+            <p>Please rotate your device for a better experience</p>
         </div>
 
-        <!-- Debug Info -->
-        <div id="debug-info">
-            <div>Status: <span id="debug-status">Loading...</span></div>
-            <div>Window: <span id="debug-window">-</span></div>
-            <div>Game: <span id="debug-game">-</span></div>
+        <!-- Intro Screen -->
+        <div class="intro-screen" id="intro-screen">
+            <h1 class="intro-title">Darya Pylypenko</h1>
+            <p class="intro-subtitle">Interactive Portfolio Experience</p>
+            <p class="intro-description">Explore my world of development, creativity, and innovation through this immersive game-style portfolio. Walk around, discover my projects, and learn about my journey in technology.</p>
+            <button class="play-button" id="play-button">Enter Portfolio</button>
         </div>
+
+        <!-- Game Canvas -->
+        <div id="game-canvas"></div>
 
         <!-- Menu Button -->
-        <button id="menu-button">Menu</button>
+        <button class="menu-button" id="menu-button">Menu</button>
+
+        <!-- Game UI -->
+        <div class="game-ui" id="game-ui" style="display: none;">
+            <div>Use WASD or Arrow Keys to move</div>
+        </div>
 
         <!-- Instructions -->
-        <div id="instructions">
-            Use arrow keys or WASD to move • Press E near objects to interact
+        <div class="instructions" id="instructions" style="display: none;">
+            Walk to the colored markers to explore my portfolio sections
         </div>
 
         <!-- Menu Overlay -->
-        <div id="menu-overlay">
-            <div id="menu-content">
-                <h2 id="menu-title">Portfolio Menu</h2>
-                <a href="#" class="menu-item" data-section="about">About Me</a>
-                <a href="#" class="menu-item" data-section="projects">Projects</a>
-                <a href="#" class="menu-item" data-section="resume">Resume/CV</a>
-                <a href="#" class="menu-item" data-section="skills">Skills</a>
-                <a href="#" class="menu-item" data-section="certifications">Certifications</a>
-                <a href="#" class="menu-item" data-section="contact">Contact</a>
-            </div>
-        </div>
-
-        <!-- Section Overlays -->
-        <div id="about-overlay" class="overlay">
-            <div class="overlay-content">
-                <button class="overlay-close">&times;</button>
-                <h2>About Me</h2>
-                <p>Hello! I'm [Your Name], a passionate [Your Profession] with [X] years of experience in creating innovative digital solutions. I love turning complex problems into simple, beautiful, and intuitive designs.</p>
-                <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.</p>
-                <h3>What I Do</h3>
-                <ul>
-                    <li>Front-end development with modern frameworks</li>
-                    <li>Backend API development and database design</li>
-                    <li>Mobile app development</li>
-                    <li>UI/UX design and prototyping</li>
-                    <li>DevOps and cloud deployment</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="projects-overlay" class="overlay">
-            <div class="overlay-content">
-                <button class="overlay-close">&times;</button>
-                <h2>My Projects</h2>
-                
-                <div class="project-item">
-                    <div class="project-title">E-Commerce Platform</div>
-                    <p>A full-stack e-commerce solution built with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.</p>
-                    <p><strong>Technologies:</strong> React, Node.js, MongoDB, Stripe API</p>
-                </div>
-
-                <div class="project-item">
-                    <div class="project-title">Task Management App</div>
-                    <p>A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.</p>
-                    <p><strong>Technologies:</strong> Vue.js, Socket.io, Express.js, PostgreSQL</p>
-                </div>
-
-                <div class="project-item">
-                    <div class="project-title">Weather Dashboard</div>
-                    <p>A responsive weather dashboard that displays current conditions and forecasts for multiple cities with interactive charts and maps.</p>
-                    <p><strong>Technologies:</strong> JavaScript, Chart.js, OpenWeather API, CSS Grid</p>
-                </div>
-
-                <div class="project-item">
-                    <div class="project-title">Portfolio Website</div>
-                    <p>This interactive portfolio website built with Phaser.js, featuring a game-like interface for exploring my work and skills.</p>
-                    <p><strong>Technologies:</strong> Phaser.js, HTML5 Canvas, CSS3, JavaScript</p>
+        <div class="menu-overlay" id="menu-overlay">
+            <div class="menu-content">
+                <h2 class="menu-title">Portfolio Menu</h2>
+                <div class="menu-buttons">
+                    <button class="menu-btn" data-section="about">About Me</button>
+                    <button class="menu-btn" data-section="projects">Projects</button>
+                    <button class="menu-btn" data-section="resume">Resume</button>
+                    <button class="menu-btn" data-section="skills">Skills</button>
+                    <button class="menu-btn" data-section="awards">Awards</button>
+                    <button class="menu-btn" data-section="contact">Contact</button>
                 </div>
             </div>
         </div>
 
-        <div id="resume-overlay" class="overlay">
+        <!-- Portfolio Section Overlays -->
+        <!-- About Me Overlay -->
+        <div class="overlay" id="about-overlay">
             <div class="overlay-content">
                 <button class="overlay-close">&times;</button>
-                <h2>Resume / CV</h2>
-                
-                <h3>Experience</h3>
-                <p><strong>Senior Frontend Developer</strong> - Tech Company Inc. (2020 - Present)</p>
-                <ul>
-                    <li>Led development of customer-facing web applications</li>
-                    <li>Mentored junior developers and conducted code reviews</li>
-                    <li>Implemented responsive designs and optimized performance</li>
-                </ul>
-
-                <p><strong>Full Stack Developer</strong> - StartupXYZ (2018 - 2020)</p>
-                <ul>
-                    <li>Developed full-stack web applications from concept to deployment</li>
-                    <li>Collaborated with design team to implement pixel-perfect UIs</li>
-                    <li>Integrated third-party APIs and payment systems</li>
-                </ul>
-
-                <h3>Education</h3>
-                <p><strong>Bachelor of Science in Computer Science</strong> - University Name (2014 - 2018)</p>
-                <p>Relevant coursework: Data Structures, Algorithms, Software Engineering, Database Systems</p>
-
-                <h3>Certifications</h3>
-                <ul>
-                    <li>AWS Certified Developer Associate</li>
-                    <li>Google Cloud Professional Developer</li>
-                    <li>Certified Scrum Master (CSM)</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="skills-overlay" class="overlay">
-            <div class="overlay-content">
-                <button class="overlay-close">&times;</button>
-                <h2>Skills & Technologies</h2>
-                
-                <h3>Frontend Development</h3>
-                <div>
-                    <span class="skill-tag">JavaScript</span>
-                    <span class="skill-tag">TypeScript</span>
-                    <span class="skill-tag">React</span>
-                    <span class="skill-tag">Vue.js</span>
-                    <span class="skill-tag">Angular</span>
-                    <span class="skill-tag">HTML5</span>
-                    <span class="skill-tag">CSS3</span>
-                    <span class="skill-tag">Sass/SCSS</span>
-                    <span class="skill-tag">Webpack</span>
-                    <span class="skill-tag">Vite</span>
-                </div>
-
-                <h3>Backend Development</h3>
-                <div>
-                    <span class="skill-tag">Node.js</span>
-                    <span class="skill-tag">Express.js</span>
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">Django</span>
-                    <span class="skill-tag">Flask</span>
-                    <span class="skill-tag">PHP</span>
-                    <span class="skill-tag">Laravel</span>
-                    <span class="skill-tag">REST APIs</span>
-                    <span class="skill-tag">GraphQL</span>
-                </div>
-
-                <h3>Databases</h3>
-                <div>
-                    <span class="skill-tag">MongoDB</span>
-                    <span class="skill-tag">PostgreSQL</span>
-                    <span class="skill-tag">MySQL</span>
-                    <span class="skill-tag">Redis</span>
-                    <span class="skill-tag">Firebase</span>
-                </div>
-
-                <h3>Tools & Platforms</h3>
-                <div>
-                    <span class="skill-tag">Git</span>
-                    <span class="skill-tag">Docker</span>
-                    <span class="skill-tag">AWS</span>
-                    <span class="skill-tag">Google Cloud</span>
-                    <span class="skill-tag">Heroku</span>
-                    <span class="skill-tag">Vercel</span>
-                    <span class="skill-tag">Figma</span>
-                    <span class="skill-tag">Adobe Creative Suite</span>
+                <h2 class="overlay-header">About Me</h2>
+                <div class="overlay-text">
+                    <p>Hello! I'm Darya Pylypenko, a passionate developer with expertise in web development, C++ programming, and creating interactive digital experiences.</p>
+                    <p>I specialize in full-stack development using modern technologies like JavaScript, React, Node.js, and C++. My journey in technology began with a fascination for how things work, leading me to become a versatile developer who loves creating engaging user experiences and solving complex problems.</p>
+                    <p>I have experience working on various projects including web applications, C++ projects, and interactive portfolios. I'm always eager to learn new technologies and contribute to innovative solutions.</p>
+                    <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on creative side projects that push the boundaries of what's possible with code.</p>
                 </div>
             </div>
         </div>
 
-        <div id="certifications-overlay" class="overlay">
+        <!-- Projects Overlay -->
+        <div class="overlay" id="projects-overlay">
             <div class="overlay-content">
                 <button class="overlay-close">&times;</button>
-                <h2>Certifications & Awards</h2>
-                
-                <h3>Professional Certifications</h3>
-                <div class="project-item">
-                    <div class="project-title">AWS Certified Developer Associate</div>
-                    <p>Amazon Web Services - Validated expertise in developing and maintaining applications on AWS platform</p>
+                <h2 class="overlay-header">My Projects</h2>
+                <div class="overlay-text">
+                    <div class="project-item">
+                        <div class="project-title">Interactive Portfolio Website</div>
+                        <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around. This project showcases my ability to create engaging user experiences using modern web technologies.</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Coppola Artistica Website</div>
+                        <p>A modern web application built with React and modern web technologies. Features responsive design, interactive elements, and optimized performance for showcasing artistic work.</p>
+                        <p><strong>Technologies:</strong> React, JavaScript, HTML5, CSS3</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">C++ Projects Collection</div>
+                        <p>A comprehensive collection of C++ projects demonstrating various programming concepts, algorithms, and data structures. Includes projects ranging from basic programming exercises to complex system implementations.</p>
+                        <p><strong>Technologies:</strong> C++, Data Structures, Algorithms</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Web Development Projects</div>
+                        <p>Various web applications and websites built using modern frameworks and technologies. Includes responsive designs, interactive features, and optimized user experiences.</p>
+                        <p><strong>Technologies:</strong> JavaScript, HTML5, CSS3, React, Node.js</p>
+                    </div>
                 </div>
-
-                <div class="project-item">
-                    <div class="project-title">Google Cloud Professional Developer</div>
-                    <p>Google Cloud Platform - Demonstrated ability to design, develop, and manage applications on GCP</p>
-                </div>
-
-                <div class="project-item">
-                    <div class="project-title">Certified Scrum Master (CSM)</div>
-                    <p>Scrum Alliance - Agile project management and team leadership certification</p>
-                </div>
-
-                <h3>Awards & Recognition</h3>
-                <ul>
-                    <li>Employee of the Year 2022 - Tech Company Inc.</li>
-                    <li>Best Innovation Award - StartupXYZ Hackathon 2019</li>
-                    <li>Open Source Contributor - GitHub (500+ contributions)</li>
-                    <li>Speaker - Tech Conference 2023</li>
-                </ul>
-
-                <h3>Online Courses Completed</h3>
-                <ul>
-                    <li>Advanced React Patterns - Frontend Masters</li>
-                    <li>System Design Interview - Educative</li>
-                    <li>Machine Learning Fundamentals - Coursera</li>
-                    <li>Docker & Kubernetes - Udemy</li>
-                </ul>
             </div>
         </div>
 
-        <div id="contact-overlay" class="overlay">
+        <!-- Resume Overlay -->
+        <div class="overlay" id="resume-overlay">
             <div class="overlay-content">
                 <button class="overlay-close">&times;</button>
-                <h2>Get In Touch</h2>
-                <p>I'm always interested in new opportunities and exciting projects. Let's connect!</p>
-                
-                <h3>Contact Information</h3>
-                <p><strong>Email:</strong> your.email@example.com</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Location:</strong> Your City, Country</p>
+                <h2 class="overlay-header">Resume & Experience</h2>
+                <div class="overlay-text">
+                    <h3>Experience</h3>
+                    <p><strong>Full Stack Developer</strong> - Freelance (2020-Present)</p>
+                    <p>Developing web applications and interactive experiences using modern technologies. Specializing in React, JavaScript, and C++ development.</p>
+                    
+                    <p><strong>Web Developer</strong> - Various Projects (2019-Present)</p>
+                    <p>Created responsive websites and web applications including the Coppola Artistica website and various C++ projects. Focus on user experience and performance optimization.</p>
+                    
+                    <h3>Skills & Expertise</h3>
+                    <p><strong>Programming Languages:</strong> JavaScript, C++, HTML5, CSS3</p>
+                    <p><strong>Frameworks & Libraries:</strong> React, Node.js, Phaser 3</p>
+                    <p><strong>Development Tools:</strong> Git, GitHub, Modern IDEs</p>
+                    <p><strong>Areas of Focus:</strong> Web Development, Game Development, Interactive Design</p>
+                    
+                    <h3>Education & Learning</h3>
+                    <p>Self-taught developer with strong foundation in computer science principles, data structures, and algorithms. Continuously learning new technologies and best practices.</p>
+                </div>
+            </div>
+        </div>
 
-                <h3>Social Media</h3>
-                <ul>
-                    <li><strong>LinkedIn:</strong> <a href="#" style="color: #4a9eff;">linkedin.com/in/yourprofile</a></li>
-                    <li><strong>GitHub:</strong> <a href="#" style="color: #4a9eff;">github.com/yourusername</a></li>
-                    <li><strong>Twitter:</strong> <a href="#" style="color: #4a9eff;">@yourusername</a></li>
-                    <li><strong>Portfolio:</strong> <a href="#" style="color: #4a9eff;">yourwebsite.com</a></li>
-                </ul>
+        <!-- Skills Overlay -->
+        <div class="overlay" id="skills-overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2 class="overlay-header">Skills & Technologies</h2>
+                <div class="overlay-text">
+                    <h3>Programming Languages</h3>
+                    <span class="skill-item">JavaScript</span>
+                    <span class="skill-item">C++</span>
+                    <span class="skill-item">HTML5</span>
+                    <span class="skill-item">CSS3</span>
+                    <span class="skill-item">Python</span>
+                    
+                    <h3>Frontend Technologies</h3>
+                    <span class="skill-item">React</span>
+                    <span class="skill-item">Node.js</span>
+                    <span class="skill-item">Phaser 3</span>
+                    <span class="skill-item">Responsive Design</span>
+                    <span class="skill-item">Web APIs</span>
+                    
+                    <h3>Development Tools</h3>
+                    <span class="skill-item">Git</span>
+                    <span class="skill-item">GitHub</span>
+                    <span class="skill-item">VS Code</span>
+                    <span class="skill-item">Chrome DevTools</span>
+                    <span class="skill-item">Terminal/Command Line</span>
+                    
+                    <h3>Game Development</h3>
+                    <span class="skill-item">Phaser 3</span>
+                    <span class="skill-item">Canvas API</span>
+                    <span class="skill-item">2D Graphics</span>
+                    <span class="skill-item">Game Physics</span>
+                    <span class="skill-item">Interactive Design</span>
+                    
+                    <h3>Data Structures & Algorithms</h3>
+                    <span class="skill-item">C++ STL</span>
+                    <span class="skill-item">Algorithm Design</span>
+                    <span class="skill-item">Problem Solving</span>
+                    <span class="skill-item">Code Optimization</span>
+                </div>
+            </div>
+        </div>
 
-                <h3>Let's Work Together</h3>
-                <p>Whether you have a project in mind, want to collaborate, or just want to say hello, I'd love to hear from you. I'm particularly interested in:</p>
-                <ul>
-                    <li>Full-stack web development projects</li>
-                    <li>Mobile app development</li>
-                    <li>Open source contributions</li>
-                    <li>Technical writing and mentoring</li>
-                </ul>
+        <!-- Awards Overlay -->
+        <div class="overlay" id="awards-overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2 class="overlay-header">Awards & Certifications</h2>
+                <div class="overlay-text">
+                    <div class="project-item">
+                        <div class="project-title">Interactive Portfolio Recognition</div>
+                        <p>Created an innovative game-style portfolio that demonstrates creativity and technical skills in web development and game design.</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Web Development Projects</div>
+                        <p>Successfully developed and deployed multiple web applications including the Coppola Artistica website, showcasing proficiency in modern web technologies.</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">C++ Programming Excellence</div>
+                        <p>Demonstrated strong programming skills through various C++ projects, showcasing understanding of data structures, algorithms, and software engineering principles.</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Continuous Learning</div>
+                        <p>Committed to ongoing education and skill development, staying current with the latest technologies and best practices in software development.</p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Open Source Contributions</div>
+                        <p>Active contributor to open source projects and developer community, sharing knowledge and collaborating with other developers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Overlay -->
+        <div class="overlay" id="contact-overlay">
+            <div class="overlay-content">
+                <button class="overlay-close">&times;</button>
+                <h2 class="overlay-header">Contact Me</h2>
+                <div class="overlay-text">
+                    <p>I'm always interested in new opportunities and exciting projects!</p>
+                    <br>
+                    <p><strong>Email:</strong> darya.pylypenko@example.com</p>
+                    <p><strong>Location:</strong> Available for remote work</p>
+                    <br>
+                    <p><strong>Social Media & Links:</strong></p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/darya-pylypenko-24288b207" target="_blank" style="color: #00d4ff;">linkedin.com/in/darya-pylypenko-24288b207</a></p>
+                    <p><strong>Website:</strong> <a href="https://daryapylypenko.com/" target="_blank" style="color: #00d4ff;">daryapylypenko.com</a></p>
+                    <p><strong>GitHub:</strong> <a href="https://github.com/lldaryall" target="_blank" style="color: #00d4ff;">github.com/lldaryall</a></p>
+                    <br>
+                    <p><strong>Featured Projects:</strong></p>
+                    <p><strong>Coppola Artistica:</strong> <a href="https://coppolaartistica.vercel.app/" target="_blank" style="color: #00d4ff;">coppolaartistica.vercel.app</a></p>
+                    <p><strong>C++ Projects:</strong> <a href="https://github.com/lldaryall/C-projects" target="_blank" style="color: #00d4ff;">github.com/lldaryall/C-projects</a></p>
+                    <br>
+                    <p>Feel free to reach out if you'd like to collaborate or just want to chat about technology!</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
     <script>
-        // Debug function
-        function debug(message) {
-            console.log(message);
-            const debugStatus = document.getElementById('debug-status');
-            if (debugStatus) {
-                debugStatus.textContent = message;
-            }
+        // Enhanced game configuration and variables
+        let game;
+        let player;
+        let cursors;
+        let wasd;
+        let map;
+        let markers = [];
+        let currentOverlay = null;
+        let particles;
+        let backgroundMusic;
+        let soundEffects = {};
+
+        // Check if device is mobile
+        function isMobile() {
+            return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Update debug info
-        function updateDebug() {
-            const debugWindow = document.getElementById('debug-window');
-            const debugGame = document.getElementById('debug-game');
-            
-            if (debugWindow) {
-                debugWindow.textContent = window.innerWidth + 'x' + window.innerHeight;
-            }
-            
-            if (debugGame) {
-                debugGame.textContent = game ? 'Created' : 'Not created';
-            }
+        // Show mobile message if on mobile
+        if (isMobile()) {
+            document.getElementById('mobile-message').style.display = 'flex';
         }
 
-        // Show debug info
-        function showDebug() {
-            const debugInfo = document.getElementById('debug-info');
-            if (debugInfo) {
-                debugInfo.style.display = 'block';
-            }
+        // Enhanced loading screen animation
+        function animateLoading() {
+            const dots = document.getElementById('loading-dots');
+            const messages = [
+                'Preparing interactive experience',
+                'Loading game assets',
+                'Initializing portfolio world',
+                'Setting up animations',
+                'Almost ready...'
+            ];
+            let messageIndex = 0;
+            let dotCount = 0;
+            
+            const interval = setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                dots.textContent = messages[messageIndex] + '.'.repeat(dotCount);
+                
+                if (dotCount === 0) {
+                    messageIndex = (messageIndex + 1) % messages.length;
+                }
+            }, 800);
+            return interval;
         }
 
-        // Game variables
-        let game = null;
-        let player = null;
-        let cursors = null;
-        let wasd = null;
-        let interactiveZones = [];
-        let currentZone = null;
+        // Enhanced game configuration
+        const config = {
+            type: Phaser.AUTO,
+            width: 1200,
+            height: 800,
+            parent: 'game-canvas',
+            backgroundColor: '#0a0a0a',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            },
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+                width: 1200,
+                height: 800
+            }
+        };
 
-        // Loading messages
-        const loadingMessages = [
-            "Preparing your adventure...",
-            "Loading game assets...",
-            "Setting up the world...",
-            "Almost ready...",
-            "Final touches...",
-            "Ready to explore!"
-        ];
-
-        let messageIndex = 0;
-
-        // Initialize the game
-        function initGame() {
-            debug('Initializing game...');
-            updateDebug();
+        // Create enhanced sprite graphics
+        function createSprites() {
+            // Create grass texture
+            const grassTexture = game.textures.createCanvas('grass', 32, 32);
+            const grassCtx = grassTexture.getContext();
+            const grassGradient = grassCtx.createLinearGradient(0, 0, 32, 32);
+            grassGradient.addColorStop(0, '#4a7c59');
+            grassGradient.addColorStop(0.5, '#5a8c69');
+            grassGradient.addColorStop(1, '#3a6c49');
+            grassCtx.fillStyle = grassGradient;
+            grassCtx.fillRect(0, 0, 32, 32);
             
-            // Check for mobile device
-            if (window.innerHeight < 400 || window.innerWidth < 400) {
-                debug('Mobile device detected');
-                document.getElementById('mobile-message').style.display = 'flex';
-                return;
+            // Add grass pattern
+            for (let i = 0; i < 8; i++) {
+                grassCtx.fillStyle = '#2a5c39';
+                grassCtx.fillRect(Math.random() * 32, Math.random() * 32, 2, 2);
             }
+            grassTexture.refresh();
 
-            debug('Creating Phaser game...');
-            try {
-                // Game configuration
-                const config = {
-                    type: Phaser.AUTO,
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    parent: 'game-container',
-                    backgroundColor: '#1a1a2e',
-                    physics: {
-                        default: 'arcade',
-                        arcade: {
-                            gravity: { y: 0 },
-                            debug: false
-                        }
-                    },
-                    scene: {
-                        preload: preload,
-                        create: create,
-                        update: update
-                    },
-                    scale: {
-                        mode: Phaser.Scale.RESIZE,
-                        autoCenter: Phaser.Scale.CENTER_BOTH
-                    }
-                };
-
-                game = new Phaser.Game(config);
-                debug('Game created successfully');
-                updateDebug();
-            } catch (error) {
-                debug('Error creating game: ' + error.message);
-                console.error('Game creation error:', error);
+            // Create water texture
+            const waterTexture = game.textures.createCanvas('water', 32, 32);
+            const waterCtx = waterTexture.getContext();
+            const waterGradient = waterCtx.createLinearGradient(0, 0, 32, 32);
+            waterGradient.addColorStop(0, '#4a90e2');
+            waterGradient.addColorStop(0.5, '#5aa0f2');
+            waterGradient.addColorStop(1, '#3a80d2');
+            waterCtx.fillStyle = waterGradient;
+            waterCtx.fillRect(0, 0, 32, 32);
+            
+            // Add water animation pattern
+            for (let i = 0; i < 6; i++) {
+                waterCtx.fillStyle = '#6ab0f2';
+                waterCtx.fillRect(Math.random() * 32, Math.random() * 32, 3, 1);
             }
+            waterTexture.refresh();
+
+            // Create wall texture
+            const wallTexture = game.textures.createCanvas('wall', 32, 32);
+            const wallCtx = wallTexture.getContext();
+            wallCtx.fillStyle = '#8b4513';
+            wallCtx.fillRect(0, 0, 32, 32);
+            
+            // Add brick pattern
+            wallCtx.strokeStyle = '#654321';
+            wallCtx.lineWidth = 1;
+            for (let y = 0; y < 32; y += 8) {
+                for (let x = 0; x < 32; x += 16) {
+                    wallCtx.strokeRect(x, y, 16, 8);
+                }
+            }
+            wallTexture.refresh();
+
+            // Create player sprite
+            const playerTexture = game.textures.createCanvas('player', 24, 24);
+            const playerCtx = playerTexture.getContext();
+            
+            // Player body
+            const playerGradient = playerCtx.createRadialGradient(12, 12, 0, 12, 12, 12);
+            playerGradient.addColorStop(0, '#ff6b6b');
+            playerGradient.addColorStop(0.7, '#e55a5a');
+            playerGradient.addColorStop(1, '#cc4949');
+            playerCtx.fillStyle = playerGradient;
+            playerCtx.fillRect(4, 4, 16, 16);
+            
+            // Player eyes
+            playerCtx.fillStyle = '#ffffff';
+            playerCtx.fillRect(8, 8, 2, 2);
+            playerCtx.fillRect(14, 8, 2, 2);
+            
+            // Player pupils
+            playerCtx.fillStyle = '#000000';
+            playerCtx.fillRect(9, 9, 1, 1);
+            playerCtx.fillRect(15, 9, 1, 1);
+            
+            playerTexture.refresh();
+
+            // Create marker sprites
+            const markerColors = [0x00d4ff, 0x2ecc71, 0xe74c3c, 0xf39c12, 0x9b59b6, 0x1abc9c];
+            markerColors.forEach((color, index) => {
+                const markerTexture = game.textures.createCanvas(`marker_${index}`, 40, 40);
+                const markerCtx = markerTexture.getContext();
+                
+                // Outer glow
+                const glowGradient = markerCtx.createRadialGradient(20, 20, 0, 20, 20, 20);
+                glowGradient.addColorStop(0, `rgba(${(color >> 16) & 255}, ${(color >> 8) & 255}, ${color & 255}, 0.8)`);
+                glowGradient.addColorStop(0.7, `rgba(${(color >> 16) & 255}, ${(color >> 8) & 255}, ${color & 255}, 0.4)`);
+                glowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                markerCtx.fillStyle = glowGradient;
+                markerCtx.fillRect(0, 0, 40, 40);
+                
+                // Inner circle
+                markerCtx.fillStyle = `#${color.toString(16).padStart(6, '0')}`;
+                markerCtx.beginPath();
+                markerCtx.arc(20, 20, 15, 0, Math.PI * 2);
+                markerCtx.fill();
+                
+                // Center dot
+                markerCtx.fillStyle = '#ffffff';
+                markerCtx.beginPath();
+                markerCtx.arc(20, 20, 5, 0, Math.PI * 2);
+                markerCtx.fill();
+                
+                markerTexture.refresh();
+            });
         }
 
         // Preload assets
         function preload() {
-            debug('Preload function called');
-            
-            // Create colored sprites
-            const grassGraphics = this.add.graphics();
-            grassGraphics.fillStyle(0x4CAF50);
-            grassGraphics.fillRect(0, 0, 32, 32);
-            grassGraphics.generateTexture('grass', 32, 32);
-            grassGraphics.destroy();
-            debug('Grass texture created');
-                
-            const waterGraphics = this.add.graphics();
-            waterGraphics.fillStyle(0x2196F3);
-            waterGraphics.fillRect(0, 0, 32, 32);
-            waterGraphics.generateTexture('water', 32, 32);
-            waterGraphics.destroy();
-            debug('Water texture created');
-                
-            const wallGraphics = this.add.graphics();
-            wallGraphics.fillStyle(0x795548);
-            wallGraphics.fillRect(0, 0, 32, 32);
-            wallGraphics.generateTexture('wall', 32, 32);
-            wallGraphics.destroy();
-            debug('Wall texture created');
-                
-            const playerGraphics = this.add.graphics();
-            playerGraphics.fillStyle(0xFF5722);
-            playerGraphics.fillRect(0, 0, 24, 24);
-            playerGraphics.generateTexture('player', 24, 24);
-            playerGraphics.destroy();
-            debug('Player texture created');
-
-            // Show intro screen
-            setTimeout(() => {
-                debug('Showing intro screen');
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('intro-screen').style.display = 'flex';
-            }, 1000);
+            // Create enhanced sprites
+            createSprites();
         }
 
-        // Create game world
+        // Create enhanced game world
         function create() {
-            debug('Create function called');
+            // Create animated background
+            this.add.rectangle(0, 0, 2400, 1800, 0x0a0a0a);
             
-            const mapWidth = 20;
-            const mapHeight = 15;
-            const tileSize = 32;
-
-            debug('Creating background tiles...');
-            // Create background tiles
-            for (let x = 0; x < mapWidth; x++) {
-                for (let y = 0; y < mapHeight; y++) {
-                    let tileType = 'grass';
-                    
-                    // Create borders
-                    if (x === 0 || x === mapWidth - 1 || y === 0 || y === mapHeight - 1) {
-                        tileType = 'wall';
-                    }
-                    
-                    // Add some water tiles
-                    if ((x === 5 && y === 5) || (x === 15 && y === 10)) {
-                        tileType = 'water';
-                    }
-                    
-                    this.add.image(x * tileSize + tileSize/2, y * tileSize + tileSize/2, tileType);
+            // Create grass tiles
+            for (let x = 0; x < 2400; x += 32) {
+                for (let y = 0; y < 1800; y += 32) {
+                    const grass = this.add.image(x, y, 'grass');
+                    grass.setOrigin(0, 0);
                 }
             }
-
-            // Set world bounds
-            this.physics.world.setBounds(0, 0, mapWidth * tileSize, mapHeight * tileSize);
-
-            // Create player
-            debug('Creating player...');
-            player = this.physics.add.sprite(100, 100, 'player');
+            
+            // Create water areas with animation
+            const water1 = this.add.image(200, 200, 'water');
+            water1.setOrigin(0, 0);
+            water1.setScale(3, 3);
+            water1.setTint(0x4a90e2);
+            
+            const water2 = this.add.image(1200, 800, 'water');
+            water2.setOrigin(0, 0);
+            water2.setScale(5, 3);
+            water2.setTint(0x4a90e2);
+            
+            // Animate water
+            this.tweens.add({
+                targets: [water1, water2],
+                alpha: 0.7,
+                duration: 2000,
+                yoyo: true,
+                repeat: -1
+            });
+            
+            // Create walls
+            const walls = [
+                { x: 400, y: 300, width: 200, height: 20 },
+                { x: 800, y: 600, width: 20, height: 200 },
+                { x: 1000, y: 400, width: 150, height: 20 },
+                { x: 1500, y: 700, width: 100, height: 20 },
+                { x: 200, y: 1000, width: 20, height: 150 }
+            ];
+            
+            walls.forEach(wall => {
+                for (let x = 0; x < wall.width; x += 32) {
+                    for (let y = 0; y < wall.height; y += 32) {
+                        const wallTile = this.add.image(wall.x + x, wall.y + y, 'wall');
+                        wallTile.setOrigin(0, 0);
+                    }
+                }
+            });
+            
+            // Create player with enhanced sprite
+            player = this.add.image(200, 200, 'player');
             player.setCollideWorldBounds(true);
-            player.setScale(1.2);
-
-            // Set up camera
+            
+            // Add player animation
+            this.tweens.add({
+                targets: player,
+                scaleX: 1.1,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1
+            });
+            
+            // Set up camera to follow player
             this.cameras.main.startFollow(player);
-            this.cameras.main.setZoom(1.5);
-
-            // Create interactive zones
-            debug('Creating interactive zones...');
-            createInteractiveZones.call(this);
-
+            this.cameras.main.setBounds(0, 0, 2400, 1800);
+            this.cameras.main.setZoom(0.8);
+            
+            // Create particle system
+            particles = this.add.particles(0, 0, 'player', {
+                scale: { start: 0.1, end: 0 },
+                speed: { min: 20, max: 50 },
+                lifespan: 2000,
+                quantity: 1,
+                frequency: 1000
+            });
+            
+            // Create interactive markers for portfolio sections
+            createEnhancedMarkers.call(this);
+            
             // Set up input
-            debug('Setting up input...');
             cursors = this.input.keyboard.createCursorKeys();
             wasd = this.input.keyboard.addKeys('W,S,A,D');
-
-            // Add interaction key
-            this.input.keyboard.on('keydown-E', () => {
-                if (currentZone) {
-                    openSection(currentZone.section);
+            
+            // Add keyboard shortcuts
+            this.input.keyboard.on('keydown-ESC', () => {
+                if (currentOverlay) {
+                    closeOverlay();
+                } else {
+                    document.getElementById('menu-overlay').style.display = 'flex';
+                    this.scene.pause();
                 }
             });
-
-            debug('Game world created successfully!');
+            
+            // Hide loading screen and show intro
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('intro-screen').style.display = 'flex';
+            }, 3000);
         }
 
-        // Create interactive zones
-        function createInteractiveZones() {
-            const zones = [
-                { x: 200, y: 150, width: 80, height: 60, section: 'about', label: 'About Me' },
-                { x: 400, y: 200, width: 80, height: 60, section: 'projects', label: 'Projects' },
-                { x: 150, y: 300, width: 80, height: 60, section: 'resume', label: 'Resume' },
-                { x: 350, y: 350, width: 80, height: 60, section: 'skills', label: 'Skills' },
-                { x: 500, y: 250, width: 80, height: 60, section: 'certifications', label: 'Awards' },
-                { x: 300, y: 450, width: 80, height: 60, section: 'contact', label: 'Contact' }
+        // Create enhanced interactive markers
+        function createEnhancedMarkers() {
+            const markerData = [
+                { x: 400, y: 300, section: 'about', color: 0x00d4ff, text: 'About Me', icon: '👤' },
+                { x: 800, y: 500, section: 'projects', color: 0x2ecc71, text: 'Projects', icon: '💻' },
+                { x: 1200, y: 400, section: 'resume', color: 0xe74c3c, text: 'Resume', icon: '📄' },
+                { x: 1600, y: 600, section: 'skills', color: 0xf39c12, text: 'Skills', icon: '⚡' },
+                { x: 600, y: 1000, section: 'awards', color: 0x9b59b6, text: 'Awards', icon: '🏆' },
+                { x: 1400, y: 1200, section: 'contact', color: 0x1abc9c, text: 'Contact', icon: '📧' }
             ];
-
-            zones.forEach(zoneData => {
-                const zone = this.physics.add.sprite(zoneData.x, zoneData.y, null);
-                zone.setDisplaySize(zoneData.width, zoneData.height);
-                zone.setAlpha(0);
-                zone.section = zoneData.section;
-                zone.label = zoneData.label;
+            
+            markerData.forEach((data, index) => {
+                // Create marker with enhanced sprite
+                const marker = this.add.image(data.x, data.y, `marker_${index}`);
+                marker.setInteractive();
+                marker.setData('section', data.section);
+                marker.setScale(0.8);
                 
-                interactiveZones.push(zone);
-
-                // Add overlap detection
-                this.physics.add.overlap(player, zone, () => {
-                    if (currentZone !== zone) {
-                        currentZone = zone;
-                        showZoneIndicator(zone);
-                    }
-                }, null, this);
+                // Add pulsing animation
+                this.tweens.add({
+                    targets: marker,
+                    scaleX: 1.2,
+                    scaleY: 1.2,
+                    duration: 1500,
+                    yoyo: true,
+                    repeat: -1
+                });
+                
+                // Add text label with better styling
+                const text = this.add.text(data.x, data.y - 40, data.text, {
+                    fontSize: '16px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 2
+                });
+                text.setOrigin(0.5);
+                
+                // Add icon
+                const icon = this.add.text(data.x, data.y, data.icon, {
+                    fontSize: '20px',
+                    fontFamily: 'Arial'
+                });
+                icon.setOrigin(0.5);
+                
+                // Add hover effects
+                marker.on('pointerover', () => {
+                    marker.setScale(1.0);
+                    text.setScale(1.2);
+                    icon.setScale(1.2);
+                    this.tweens.add({
+                        targets: [marker, text, icon],
+                        alpha: 0.8,
+                        duration: 200,
+                        yoyo: true
+                    });
+                });
+                
+                marker.on('pointerout', () => {
+                    marker.setScale(0.8);
+                    text.setScale(1.0);
+                    icon.setScale(1.0);
+                });
+                
+                // Add click handler with particle effect
+                marker.on('pointerdown', () => {
+                    // Create particle burst
+                    particles.setPosition(data.x, data.y);
+                    particles.explode(10);
+                    
+                    // Open overlay with delay for effect
+                    setTimeout(() => {
+                        openOverlay(data.section);
+                    }, 300);
+                });
+                
+                markers.push(marker);
             });
         }
 
-        // Show zone indicator
-        function showZoneIndicator(zone) {
-            hideZoneIndicator();
-            // Create visual indicator
-            const indicator = game.scene.scenes[0].add.graphics();
-            indicator.lineStyle(2, 0x2779a7, 0.8);
-            indicator.strokeRect(zone.x - zone.displayWidth/2, zone.y - zone.displayHeight/2, zone.displayWidth, zone.displayHeight);
-            zone.indicator = indicator;
-        }
-
-        // Hide zone indicator
-        function hideZoneIndicator() {
-            interactiveZones.forEach(zone => {
-                if (zone.indicator) {
-                    zone.indicator.destroy();
-                    zone.indicator = null;
-                }
-            });
-        }
-
-        // Update game loop
+        // Enhanced update game loop
         function update() {
             if (!player) return;
-
-            // Player movement
-            const speed = 150;
-            let velocityX = 0;
-            let velocityY = 0;
-
+            
+            // Player movement with momentum
+            const speed = 300;
+            const friction = 0.8;
+            
             if (cursors.left.isDown || wasd.A.isDown) {
-                velocityX = -speed;
-            } else if (cursors.right.isDown || wasd.D.isDown) {
-                velocityX = speed;
+                player.x -= speed * this.game.loop.delta / 1000;
+                player.setFlipX(true);
             }
-
+            if (cursors.right.isDown || wasd.D.isDown) {
+                player.x += speed * this.game.loop.delta / 1000;
+                player.setFlipX(false);
+            }
             if (cursors.up.isDown || wasd.W.isDown) {
-                velocityY = -speed;
-            } else if (cursors.down.isDown || wasd.S.isDown) {
-                velocityY = speed;
+                player.y -= speed * this.game.loop.delta / 1000;
             }
-
-            player.setVelocity(velocityX, velocityY);
-
-            // Check for zone exits
-            if (currentZone) {
-                const distance = Phaser.Math.Distance.Between(
-                    player.x, player.y, 
-                    currentZone.x, currentZone.y
-                );
-                const threshold = Math.max(currentZone.displayWidth, currentZone.displayHeight) / 2 + 50;
-                
-                if (distance > threshold) {
-                    currentZone = null;
-                    hideZoneIndicator();
+            if (cursors.down.isDown || wasd.S.isDown) {
+                player.y += speed * this.game.loop.delta / 1000;
+            }
+            
+            // Check for marker interactions with enhanced feedback
+            markers.forEach(marker => {
+                const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
+                if (distance < 80) {
+                    // Player is near marker - add visual feedback
+                    marker.setTint(0xffffff);
+                    marker.setAlpha(0.9);
+                } else {
+                    marker.clearTint();
+                    marker.setAlpha(1);
                 }
-            }
+            });
         }
 
-        // Open section overlay
-        function openSection(sectionName) {
-            debug('Opening section: ' + sectionName);
-            const overlay = document.getElementById(sectionName + '-overlay');
+        // Open overlay for specific section
+        function openOverlay(section) {
+            const overlay = document.getElementById(section + '-overlay');
             if (overlay) {
                 overlay.style.display = 'flex';
-                if (game && game.scene) {
+                currentOverlay = overlay;
+                // Pause game
+                if (game) {
                     game.scene.pause();
                 }
             }
         }
 
-        // Close section overlay
-        function closeOverlay(overlayId) {
-            debug('Closing overlay: ' + overlayId);
-            const overlay = document.getElementById(overlayId);
-            if (overlay) {
-                overlay.style.display = 'none';
-                if (game && game.scene) {
+        // Close current overlay
+        function closeOverlay() {
+            if (currentOverlay) {
+                currentOverlay.style.display = 'none';
+                currentOverlay = null;
+                // Resume game
+                if (game) {
                     game.scene.resume();
                 }
             }
         }
 
+        // Start the enhanced game
+        function startGame() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('game-ui').style.display = 'block';
+            document.getElementById('instructions').style.display = 'block';
+            game = new Phaser.Game(config);
+        }
+
         // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            debug('DOM loaded');
-            showDebug();
-            updateDebug();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start enhanced loading animation
+            const loadingInterval = animateLoading();
             
-            // Simulate loading
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 0.1;
-                document.getElementById('loading-progress').style.width = (progress * 100) + '%';
-                
-                if (progress > 0.2 && messageIndex < loadingMessages.length - 1) {
-                    messageIndex++;
-                    document.getElementById('loading-messages').textContent = loadingMessages[messageIndex];
-                }
-                
-                if (progress >= 1) {
-                    clearInterval(loadingInterval);
-                    setTimeout(() => {
-                        debug('Showing intro screen');
-                        document.getElementById('loading-screen').style.display = 'none';
-                        document.getElementById('intro-screen').style.display = 'flex';
-                    }, 500);
-                }
-            }, 100);
-
             // Play button
-            document.getElementById('play-button').addEventListener('click', () => {
-                debug('Play button clicked');
-                document.getElementById('intro-screen').style.display = 'none';
-                initGame();
-            });
-
+            document.getElementById('play-button').addEventListener('click', startGame);
+            
             // Menu button
-            document.getElementById('menu-button').addEventListener('click', () => {
-                debug('Menu button clicked');
+            document.getElementById('menu-button').addEventListener('click', function() {
                 document.getElementById('menu-overlay').style.display = 'flex';
-                if (game && game.scene) {
+                if (game) {
                     game.scene.pause();
                 }
             });
-
-            // Menu close
-            document.getElementById('menu-overlay').addEventListener('click', (e) => {
-                if (e.target.id === 'menu-overlay') {
+            
+            // Menu section buttons
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
                     document.getElementById('menu-overlay').style.display = 'none';
-                    if (game && game.scene) {
+                    openOverlay(section);
+                });
+            });
+            
+            // Close overlay buttons
+            document.querySelectorAll('.overlay-close').forEach(btn => {
+                btn.addEventListener('click', closeOverlay);
+            });
+            
+            // Close overlays when clicking outside
+            document.querySelectorAll('.overlay').forEach(overlay => {
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeOverlay();
+                    }
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.getElementById('menu-overlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    if (game) {
                         game.scene.resume();
                     }
                 }
             });
-
-            // Menu items
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const section = item.getAttribute('data-section');
-                    document.getElementById('menu-overlay').style.display = 'none';
-                    openSection(section);
-                });
-            });
-
-            // Close buttons
-            document.querySelectorAll('.overlay-close').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const overlay = e.target.closest('.overlay');
-                    closeOverlay(overlay.id);
-                });
-            });
-
-            // Close overlays when clicking outside
-            document.querySelectorAll('.overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        closeOverlay(overlay.id);
-                    }
-                });
-            });
-
+            
             // Handle window resize
-            window.addEventListener('resize', () => {
-                updateDebug();
+            window.addEventListener('resize', function() {
                 if (game) {
-                    game.scale.resize(window.innerWidth, window.innerHeight);
+                    game.scale.refresh();
                 }
             });
-
-            debug('Event listeners set up');
         });
     </script>
 </body>
