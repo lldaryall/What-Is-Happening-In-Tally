@@ -348,6 +348,7 @@
         <div class="instructions" id="instructions" style="display: none;">
             <div>Use WASD/Arrow Keys to move • Click to move • SPACE to jump</div>
             <div>Walk to the glowing markers to explore my portfolio sections</div>
+            <div>Talk to NPCs for random interactions • Press ESC for menu</div>
         </div>
 
         <!-- Menu Overlay -->
@@ -374,6 +375,10 @@
                 <div class="overlay-text">
                     <p>Hello! I'm Darya Pylypenko, a passionate developer with expertise in web development, C++ programming, and creating interactive digital experiences.</p>
                     <p>I specialize in full-stack development using modern technologies like JavaScript, React, Node.js, and C++. My journey in technology began with a fascination for how things work, leading me to become a versatile developer who loves creating engaging user experiences and solving complex problems.</p>
+                    <p>I have experience working on various projects including web applications, C++ projects, and interactive portfolios. I'm always eager to learn new technologies and contribute to innovative solutions.</p>
+                    <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on creative side projects that push the boundaries of what's possible with code.</p>
+                    <br>
+                    <p><strong>Fun Fact:</strong> I built this interactive portfolio using Phaser 3 to showcase my skills in a unique and engaging way!</p>
                 </div>
             </div>
         </div>
@@ -386,11 +391,25 @@
                 <div class="overlay-text">
                     <div class="project-item">
                         <div class="project-title">Interactive Portfolio Website</div>
-                        <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around.</p>
+                        <p>A game-style portfolio built with Phaser 3, featuring a 2D world where visitors can explore different sections by walking around. This project showcases my ability to create engaging user experiences using modern web technologies.</p>
+                        <p><strong>Technologies:</strong> Phaser 3, JavaScript, HTML5, CSS3</p>
                     </div>
                     <div class="project-item">
                         <div class="project-title">Coppola Artistica Website</div>
-                        <p>A modern web application built with React and modern web technologies.</p>
+                        <p>A modern web application built with React and modern web technologies. Features responsive design, interactive elements, and optimized performance for showcasing artistic work.</p>
+                        <p><strong>Technologies:</strong> React, JavaScript, HTML5, CSS3</p>
+                        <p><strong>Live Demo:</strong> <a href="https://coppolaartistica.vercel.app/" target="_blank" style="color: #00d4ff;">coppolaartistica.vercel.app</a></p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">C++ Projects Collection</div>
+                        <p>A comprehensive collection of C++ projects demonstrating various programming concepts, algorithms, and data structures. Includes projects ranging from basic programming exercises to complex system implementations.</p>
+                        <p><strong>Technologies:</strong> C++, Data Structures, Algorithms</p>
+                        <p><strong>GitHub:</strong> <a href="https://github.com/lldaryall/C-projects" target="_blank" style="color: #00d4ff;">github.com/lldaryall/C-projects</a></p>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-title">Web Development Projects</div>
+                        <p>Various web applications and websites built using modern frameworks and technologies. Includes responsive designs, interactive features, and optimized user experiences.</p>
+                        <p><strong>Technologies:</strong> JavaScript, HTML5, CSS3, React, Node.js</p>
                     </div>
                 </div>
             </div>
@@ -443,9 +462,21 @@
                 <button class="overlay-close">&times;</button>
                 <h2 class="overlay-header">Contact Me</h2>
                 <div class="overlay-text">
+                    <p>I'm always interested in new opportunities and exciting projects!</p>
+                    <br>
                     <p><strong>Email:</strong> darya.pylypenko@example.com</p>
+                    <p><strong>Location:</strong> Available for remote work</p>
+                    <br>
+                    <p><strong>Social Media & Links:</strong></p>
                     <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/darya-pylypenko-24288b207" target="_blank" style="color: #00d4ff;">linkedin.com/in/darya-pylypenko-24288b207</a></p>
                     <p><strong>Website:</strong> <a href="https://daryapylypenko.com/" target="_blank" style="color: #00d4ff;">daryapylypenko.com</a></p>
+                    <p><strong>GitHub:</strong> <a href="https://github.com/lldaryall" target="_blank" style="color: #00d4ff;">github.com/lldaryall</a></p>
+                    <br>
+                    <p><strong>Featured Projects:</strong></p>
+                    <p><strong>Coppola Artistica:</strong> <a href="https://coppolaartistica.vercel.app/" target="_blank" style="color: #00d4ff;">coppolaartistica.vercel.app</a></p>
+                    <p><strong>C++ Projects:</strong> <a href="https://github.com/lldaryall/C-projects" target="_blank" style="color: #00d4ff;">github.com/lldaryall/C-projects</a></p>
+                    <br>
+                    <p>Feel free to reach out if you'd like to collaborate or just want to chat about technology!</p>
                 </div>
             </div>
         </div>
@@ -522,7 +553,7 @@
             console.log('Preload function called');
         }
 
-        // Create game world - FIXED VERSION
+        // Create game world - ENHANCED VERSION
         function create() {
             console.log('Create function called - starting game world creation');
             
@@ -530,38 +561,160 @@
             this.add.rectangle(500, 350, 1000, 700, 0x2d5016);
             console.log('Background created');
             
-            // Create a simple grass pattern
-            for (let x = 0; x < 1000; x += 50) {
-                for (let y = 0; y < 700; y += 50) {
-                    this.add.rectangle(x + 25, y + 25, 50, 50, 0x4a7c59);
+            // Create grass pattern
+            for (let x = 0; x < 1000; x += 40) {
+                for (let y = 0; y < 700; y += 40) {
+                    const grass = this.add.rectangle(x + 20, y + 20, 40, 40, 0x4a7c59);
+                    grass.setAlpha(0.8 + Math.random() * 0.2);
                 }
             }
             console.log('Grass pattern created');
             
+            // Create roads
+            this.add.rectangle(500, 100, 1000, 20, 0x666666); // Horizontal road
+            this.add.rectangle(500, 600, 1000, 20, 0x666666); // Horizontal road
+            this.add.rectangle(100, 350, 20, 700, 0x666666); // Vertical road
+            this.add.rectangle(900, 350, 20, 700, 0x666666); // Vertical road
+            console.log('Roads created');
+            
+            // Create buildings
+            const buildings = [
+                { x: 200, y: 150, width: 80, height: 60, color: 0x8b4513, name: 'Office' },
+                { x: 400, y: 150, width: 100, height: 80, color: 0x654321, name: 'Tech Hub' },
+                { x: 600, y: 150, width: 90, height: 70, color: 0x8b4513, name: 'Studio' },
+                { x: 200, y: 450, width: 120, height: 100, color: 0x654321, name: 'Lab' },
+                { x: 500, y: 450, width: 110, height: 90, color: 0x8b4513, name: 'Workshop' },
+                { x: 700, y: 450, width: 100, height: 80, color: 0x654321, name: 'Library' }
+            ];
+            
+            buildings.forEach(building => {
+                const buildingRect = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
+                // Add building details
+                this.add.rectangle(building.x, building.y - 20, building.width - 20, 10, 0x000000); // Roof
+                this.add.rectangle(building.x - 30, building.y, 10, building.height, 0x654321); // Door
+                // Add building label
+                const label = this.add.text(building.x, building.y - 40, building.name, {
+                    fontSize: '12px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 1
+                });
+                label.setOrigin(0.5);
+            });
+            console.log('Buildings created');
+            
+            // Create plants and decorations
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * 1000;
+                const y = Math.random() * 700;
+                if (x > 50 && x < 950 && y > 50 && y < 650) {
+                    const plant = this.add.circle(x, y, 8, 0x228b22);
+                    this.tweens.add({
+                        targets: plant,
+                        scaleX: 1.2,
+                        scaleY: 1.2,
+                        duration: 2000 + Math.random() * 2000,
+                        yoyo: true,
+                        repeat: -1
+                    });
+                }
+            }
+            console.log('Plants created');
+            
+            // Create NPCs
+            const npcs = [
+                { x: 300, y: 200, color: 0x4169e1, name: 'Developer' },
+                { x: 500, y: 300, color: 0xff6347, name: 'Designer' },
+                { x: 700, y: 400, color: 0x32cd32, name: 'Manager' },
+                { x: 150, y: 500, color: 0xffd700, name: 'Mentor' }
+            ];
+            
+            npcs.forEach(npc => {
+                const npcCircle = this.add.circle(npc.x, npc.y, 15, npc.color);
+                const npcLabel = this.add.text(npc.x, npc.y - 25, npc.name, {
+                    fontSize: '10px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 1
+                });
+                npcLabel.setOrigin(0.5);
+                
+                // Add NPC animation
+                this.tweens.add({
+                    targets: npcCircle,
+                    y: npc.y - 5,
+                    duration: 3000 + Math.random() * 2000,
+                    yoyo: true,
+                    repeat: -1
+                });
+            });
+            console.log('NPCs created');
+            
             // Create player - BIG RED CIRCLE (NO PHYSICS)
-            player = this.add.circle(100, 100, 30, 0xff0000);
+            player = this.add.circle(100, 100, 25, 0xff0000);
             console.log('Player created at position:', player.x, player.y);
             
             // Add player animation
             this.tweens.add({
                 targets: player,
-                scaleX: 1.2,
-                scaleY: 1.2,
+                scaleX: 1.1,
+                scaleY: 1.1,
                 duration: 1000,
                 yoyo: true,
                 repeat: -1
             });
             console.log('Player animation added');
             
-            // Create simple markers
-            const marker1 = this.add.circle(200, 200, 25, 0x00ff00);
-            const marker2 = this.add.circle(500, 350, 25, 0x0000ff);
-            const marker3 = this.add.circle(800, 500, 25, 0xff00ff);
-            const marker4 = this.add.circle(300, 500, 25, 0xffff00);
-            const marker5 = this.add.circle(700, 200, 25, 0xff8000);
-            const marker6 = this.add.circle(100, 400, 25, 0x00ffff);
+            // Create interactive markers with proper data
+            const markerData = [
+                { x: 200, y: 200, color: 0x00ff00, section: 'about', name: 'About Me' },
+                { x: 500, y: 300, color: 0x0000ff, section: 'projects', name: 'Projects' },
+                { x: 800, y: 500, color: 0xff00ff, section: 'resume', name: 'Resume' },
+                { x: 300, y: 500, color: 0xffff00, section: 'skills', name: 'Skills' },
+                { x: 700, y: 200, color: 0xff8000, section: 'awards', name: 'Awards' },
+                { x: 100, y: 400, color: 0x00ffff, section: 'contact', name: 'Contact' }
+            ];
             
-            markers = [marker1, marker2, marker3, marker4, marker5, marker6];
+            markers = markerData.map(data => {
+                const marker = this.add.circle(data.x, data.y, 20, data.color);
+                marker.setData('section', data.section);
+                marker.setData('name', data.name);
+                
+                // Add pulsing animation
+                this.tweens.add({
+                    targets: marker,
+                    scaleX: 1.3,
+                    scaleY: 1.3,
+                    duration: 1500,
+                    yoyo: true,
+                    repeat: -1
+                });
+                
+                // Add label
+                const label = this.add.text(data.x, data.y - 35, data.name, {
+                    fontSize: '12px',
+                    fill: '#ffffff',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 2
+                });
+                label.setOrigin(0.5);
+                
+                // Add hover effects
+                marker.on('pointerover', () => {
+                    marker.setTint(0xffffff);
+                    label.setStyle({ fill: '#ffff00', stroke: '#000000', strokeThickness: 3 });
+                });
+                
+                marker.on('pointerout', () => {
+                    marker.clearTint();
+                    label.setStyle({ fill: '#ffffff', stroke: '#000000', strokeThickness: 2 });
+                });
+                
+                return marker;
+            });
             console.log('Markers created');
             
             // Set up input
@@ -595,22 +748,6 @@
                 }
             });
             
-            // Add marker interactions
-            markers.forEach((marker, index) => {
-                marker.setInteractive();
-                marker.on('pointerdown', () => {
-                    console.log('Marker clicked:', index);
-                    // Add click animation
-                    this.tweens.add({
-                        targets: marker,
-                        scaleX: 1.5,
-                        scaleY: 1.5,
-                        duration: 200,
-                        yoyo: true
-                    });
-                });
-            });
-            
             console.log('Game world creation completed successfully!');
         }
 
@@ -639,6 +776,67 @@
             if (player.x > 970) player.x = 970;
             if (player.y < 30) player.y = 30;
             if (player.y > 670) player.y = 670;
+            
+            // Check for marker interactions
+            markers.forEach(marker => {
+                const distance = Phaser.Math.Distance.Between(player.x, player.y, marker.x, marker.y);
+                if (distance < 50) {
+                    // Player is close to marker
+                    marker.setTint(0xffffff);
+                    marker.setAlpha(0.8);
+                    
+                    // Auto-trigger interaction if close enough
+                    if (distance < 30) {
+                        const section = marker.getData('section');
+                        if (section && !currentOverlay) {
+                            console.log('Auto-triggering interaction with:', section);
+                            openOverlay(section);
+                        }
+                    }
+                } else {
+                    // Player is far from marker
+                    marker.clearTint();
+                    marker.setAlpha(1);
+                }
+            });
+            
+            // Check for random interactions (buildings, NPCs, etc.)
+            if (Math.random() < 0.001) { // 0.1% chance per frame
+                const randomMessages = [
+                    "You found a hidden easter egg! 🎉",
+                    "The wind whispers secrets of code...",
+                    "A butterfly lands on your shoulder.",
+                    "You hear distant music from the Tech Hub.",
+                    "The plants seem to be growing...",
+                    "Something sparkles in the distance.",
+                    "You feel inspired to code something new!",
+                    "The buildings seem to pulse with energy.",
+                    "A shooting star crosses the sky above.",
+                    "You discover a new programming technique!"
+                ];
+                
+                const randomMessage = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+                console.log(randomMessage);
+                
+                // Show temporary message on screen
+                const messageText = this.add.text(player.x, player.y - 50, randomMessage, {
+                    fontSize: '14px',
+                    fill: '#ffff00',
+                    fontFamily: 'Courier New',
+                    stroke: '#000000',
+                    strokeThickness: 2
+                });
+                messageText.setOrigin(0.5);
+                
+                // Fade out message
+                this.tweens.add({
+                    targets: messageText,
+                    alpha: 0,
+                    y: messageText.y - 30,
+                    duration: 3000,
+                    onComplete: () => messageText.destroy()
+                });
+            }
         }
 
         // Open overlay for specific section
