@@ -712,143 +712,224 @@
             return interval;
         }
 
-        // Game configuration - ADVANCED 3D VERSION
-                const config = {
-                    type: Phaser.AUTO,
+        // Game configuration - ADVANCED 3D VERSION WITH PHYSICS
+        const config = {
+            type: Phaser.AUTO,
             width: 1400,
             height: 900,
             parent: 'game-canvas',
             backgroundColor: '#87CEEB',
-                    physics: {
-                        default: 'arcade',
-                        arcade: {
-                            gravity: { y: 0 },
-                            debug: false
-                        }
-                    },
-                    scene: {
-                        preload: preload,
-                        create: create,
-                        update: update
-                    },
-                    scale: {
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            },
+            scale: {
                 mode: Phaser.Scale.FIT,
-                        autoCenter: Phaser.Scale.CENTER_BOTH
-                    }
-                };
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            }
+        };
 
         // Preload assets
         function preload() {
             console.log('Preload function called');
         }
 
-        // Create game world - ADVANCED 3D VERSION WITH PHYSICS
+        // Create game world - ULTRA ADVANCED 3D VERSION WITH PHYSICS
         function create() {
-            console.log('Create function called - starting advanced 3D world creation');
+            console.log('Create function called - starting ultra advanced 3D world creation');
             
             // Create world bounds
-            const worldWidth = 4000;
-            const worldHeight = 3000;
+            const worldWidth = 5000;
+            const worldHeight = 4000;
             
-            // Create sky gradient background
+            // Create enhanced sky gradient background
             const sky = this.add.graphics();
             sky.fillGradientStyle(0x87CEEB, 0x87CEEB, 0x98D8E8, 0x98D8E8, 1);
             sky.fillRect(0, 0, worldWidth, worldHeight);
-            console.log('Sky background created');
             
-            // Create ground with grass texture
+            // Add clouds
+            for (let i = 0; i < 20; i++) {
+                const cloud = this.add.circle(
+                    Math.random() * worldWidth, 
+                    Math.random() * 400 + 50, 
+                    30 + Math.random() * 40, 
+                    0xFFFFFF
+                );
+                cloud.setAlpha(0.7);
+                
+                // Animate clouds
+                this.tweens.add({
+                    targets: cloud,
+                    x: cloud.x + (Math.random() - 0.5) * 200,
+                    duration: 15000 + Math.random() * 10000,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: 'Sine.easeInOut'
+                });
+            }
+            console.log('Enhanced sky with clouds created');
+            
+            // Create textured ground with multiple layers
             const ground = this.add.graphics();
             ground.fillStyle(0x90EE90);
-            ground.fillRect(0, worldHeight - 600, worldWidth, 600);
+            ground.fillRect(0, worldHeight - 800, worldWidth, 800);
             
-            // Add grass pattern
-            for (let x = 0; x < worldWidth; x += 40) {
-                for (let y = worldHeight - 600; y < worldHeight; y += 40) {
-                    if (Math.random() < 0.8) {
-                        const grass = this.add.rectangle(x + 20, y + 20, 35, 35, 0x7CFC00);
+            // Add detailed grass texture
+            for (let x = 0; x < worldWidth; x += 30) {
+                for (let y = worldHeight - 800; y < worldHeight; y += 30) {
+                    if (Math.random() < 0.9) {
+                        const grass = this.add.rectangle(x + 15, y + 15, 25, 25, 0x7CFC00);
                         grass.setAlpha(0.6 + Math.random() * 0.4);
+                        
+                        // Add grass animation
+                        this.tweens.add({
+                            targets: grass,
+                            scaleY: 0.8 + Math.random() * 0.4,
+                            duration: 3000 + Math.random() * 2000,
+                            yoyo: true,
+                            repeat: -1,
+                            ease: 'Sine.easeInOut'
+                        });
                     }
                 }
             }
-            console.log('Ground and grass created');
             
-            // Create roads with 3D effect
+            // Add flowers
+            for (let i = 0; i < 100; i++) {
+                const flower = this.add.circle(
+                    Math.random() * worldWidth, 
+                    Math.random() * 200 + worldHeight - 400, 
+                    3 + Math.random() * 4, 
+                    [0xFF69B4, 0xFFD700, 0xFF6347, 0x9370DB][Math.floor(Math.random() * 4)]
+                );
+                
+                // Animate flowers
+                this.tweens.add({
+                    targets: flower,
+                    scaleX: 1.2,
+                    scaleY: 1.2,
+                    duration: 2000 + Math.random() * 3000,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+            }
+            console.log('Enhanced ground with textures created');
+            
+            // Create enhanced roads with 3D effect
             const roads = [
-                { x: worldWidth/2, y: 300, width: worldWidth, height: 60, color: 0x696969 },
-                { x: worldWidth/2, y: worldHeight - 300, width: worldWidth, height: 60, color: 0x696969 },
-                { x: 300, y: worldHeight/2, width: 60, height: worldHeight, color: 0x696969 },
-                { x: worldWidth - 300, y: worldHeight/2, width: 60, height: worldHeight, color: 0x696969 }
+                { x: worldWidth/2, y: 400, width: worldWidth, height: 80, color: 0x696969 },
+                { x: worldWidth/2, y: worldHeight - 400, width: worldWidth, height: 80, color: 0x696969 },
+                { x: 400, y: worldHeight/2, width: 80, height: worldHeight, color: 0x696969 },
+                { x: worldWidth - 400, y: worldHeight/2, width: 80, height: worldHeight, color: 0x696969 }
             ];
             
             roads.forEach(road => {
-                // Main road
+                // Main road with 3D effect
                 this.add.rectangle(road.x, road.y, road.width, road.height, road.color);
+                
+                // Road shadow
+                const shadow = this.add.rectangle(road.x + 5, road.y + 5, road.width, road.height, road.color - 0x222222);
+                shadow.setDepth(-1);
+                
                 // Road lines
                 if (road.width > road.height) {
-                    for (let i = 0; i < road.width; i += 80) {
-                        this.add.rectangle(road.x - road.width/2 + i, road.y, 40, 6, 0xFFFFFF);
+                    for (let i = 0; i < road.width; i += 100) {
+                        this.add.rectangle(road.x - road.width/2 + i, road.y, 50, 8, 0xFFFFFF);
                     }
                 } else {
-                    for (let i = 0; i < road.height; i += 80) {
-                        this.add.rectangle(road.x, road.y - road.height/2 + i, 6, 40, 0xFFFFFF);
+                    for (let i = 0; i < road.height; i += 100) {
+                        this.add.rectangle(road.x, road.y - road.height/2 + i, 8, 50, 0xFFFFFF);
                     }
                 }
             });
-            console.log('Roads created');
+            console.log('Enhanced roads created');
             
-            // Create buildings with physics bodies
+            // Create buildings with physics bodies and enhanced 3D
             const buildings = [
-                { x: 500, y: 500, width: 200, height: 150, color: 0x8B4513, name: 'Research Lab', floors: 3, section: 'about' },
-                { x: 1000, y: 400, width: 250, height: 180, color: 0x654321, name: 'Tech Hub', floors: 4, section: 'projects' },
-                { x: 1500, y: 600, width: 180, height: 140, color: 0x8B4513, name: 'AI Lab', floors: 3, section: 'resume' },
-                { x: 500, y: 1200, width: 280, height: 200, color: 0x654321, name: 'Data Center', floors: 4, section: 'skills' },
-                { x: 1000, y: 1300, width: 220, height: 160, color: 0x8B4513, name: 'Innovation Center', floors: 5, section: 'awards' },
-                { x: 1500, y: 1400, width: 200, height: 150, color: 0x654321, name: 'Conference Hall', floors: 3, section: 'contact' },
-                { x: 2500, y: 800, width: 300, height: 220, color: 0x8B4513, name: 'University Campus', floors: 6, section: 'about' },
-                { x: 3000, y: 1200, width: 250, height: 180, color: 0x654321, name: 'Research Institute', floors: 4, section: 'projects' }
+                { x: 600, y: 600, width: 250, height: 200, color: 0x8B4513, name: 'Research Lab', floors: 4, section: 'about' },
+                { x: 1200, y: 500, width: 300, height: 220, color: 0x654321, name: 'Tech Hub', floors: 5, section: 'projects' },
+                { x: 1800, y: 700, width: 220, height: 180, color: 0x8B4513, name: 'AI Lab', floors: 4, section: 'resume' },
+                { x: 600, y: 1500, width: 350, height: 250, color: 0x654321, name: 'Data Center', floors: 5, section: 'skills' },
+                { x: 1200, y: 1600, width: 280, height: 200, color: 0x8B4513, name: 'Innovation Center', floors: 6, section: 'awards' },
+                { x: 1800, y: 1700, width: 250, height: 180, color: 0x654321, name: 'Conference Hall', floors: 4, section: 'contact' },
+                { x: 3000, y: 1000, width: 400, height: 280, color: 0x8B4513, name: 'University Campus', floors: 7, section: 'about' },
+                { x: 3800, y: 1500, width: 320, height: 220, color: 0x654321, name: 'Research Institute', floors: 5, section: 'projects' }
             ];
             
-            // Store building bodies for collision
+            // Store building physics bodies
             window.buildingBodies = [];
             
             buildings.forEach(building => {
-                // Create 3D building effect
+                // Create main building with physics
                 const mainBuilding = this.add.rectangle(building.x, building.y, building.width, building.height, building.color);
-                
-                // Store building for collision checking
+                this.physics.add.existing(mainBuilding, true);
                 buildingBodies.push(mainBuilding);
                 
-                // Add depth effect (darker side)
-                const depth = this.add.rectangle(building.x + 15, building.y + 15, building.width, building.height, building.color - 0x333333);
+                // Add 3D depth effect (darker side)
+                const depth = this.add.rectangle(building.x + 20, building.y + 20, building.width, building.height, building.color - 0x444444);
                 depth.setDepth(-1);
                 
-                // Add roof
-                const roof = this.add.rectangle(building.x, building.y - building.height/2 - 20, building.width + 30, 25, 0x2F4F4F);
+                // Add roof with 3D effect
+                const roof = this.add.rectangle(building.x, building.y - building.height/2 - 25, building.width + 40, 30, 0x2F4F4F);
+                const roofDepth = this.add.rectangle(building.x + 15, building.y - building.height/2 - 20, building.width + 40, 30, 0x1F2F2F);
+                roofDepth.setDepth(-1);
                 
-                // Add windows with lights
+                // Add enhanced windows with lights
                 for (let i = 0; i < building.floors; i++) {
-                    for (let j = 0; j < 4; j++) {
+                    for (let j = 0; j < 5; j++) {
                         const window = this.add.rectangle(
-                            building.x - building.width/2.5 + (j * building.width/4), 
+                            building.x - building.width/2.5 + (j * building.width/5), 
                             building.y - building.height/2.5 + (i * building.height/building.floors), 
-                            20, 25, Math.random() < 0.7 ? 0x87CEEB : 0xFFD700
+                            25, 30, Math.random() < 0.8 ? 0x87CEEB : 0xFFD700
                         );
                         window.setAlpha(0.9);
+                        
+                        // Animate some windows
+                        if (Math.random() < 0.3) {
+                            this.tweens.add({
+                                targets: window,
+                                alpha: 0.3,
+                                duration: 2000 + Math.random() * 3000,
+                                yoyo: true,
+                                repeat: -1,
+                                ease: 'Sine.easeInOut'
+                            });
+                        }
                     }
                 }
                 
-                // Add door
-                const door = this.add.rectangle(building.x, building.y + building.height/2 - 15, 25, 40, 0x654321);
+                // Add door with 3D effect
+                const door = this.add.rectangle(building.x, building.y + building.height/2 - 20, 30, 50, 0x654321);
+                const doorDepth = this.add.rectangle(building.x + 5, building.y + building.height/2 - 15, 30, 50, 0x543210);
+                doorDepth.setDepth(-1);
                 
-                // Add building label
-                const label = this.add.text(building.x, building.y - building.height/2 - 50, building.name, {
-                    fontSize: '16px',
+                // Add building label with 3D effect
+                const label = this.add.text(building.x, building.y - building.height/2 - 60, building.name, {
+                    fontSize: '18px',
                     fill: '#ffffff',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
-                    strokeThickness: 3
+                    strokeThickness: 4
                 });
                 label.setOrigin(0.5);
+                
+                // Add label shadow
+                const labelShadow = this.add.text(building.x + 2, building.y - building.height/2 - 58, building.name, {
+                    fontSize: '18px',
+                    fill: '#000000',
+                    fontFamily: 'Courier New'
+                });
+                labelShadow.setOrigin(0.5);
+                labelShadow.setDepth(-1);
                 
                 // Make building interactive
                 mainBuilding.setInteractive();
@@ -865,50 +946,60 @@
                     label.setStyle({ fill: '#ffffff' });
                 });
                 
-                // Add click interaction to open portfolio section
+                // Add click interaction
                 mainBuilding.on('pointerdown', () => {
                     if (building.section) {
                         openOverlay(building.section);
                     }
                 });
             });
-            console.log('Buildings with physics created');
+            console.log('Enhanced buildings with physics created');
             
-            // Create animated cars
+            // Create animated cars with physics
             const cars = [
-                { x: 100, y: 300, color: 0xff0000, speed: 2 },
-                { x: 200, y: 300, color: 0x0000ff, speed: 1.5 },
-                { x: 300, y: 300, color: 0x00ff00, speed: 2.5 },
-                { x: 100, y: worldHeight - 300, color: 0xffff00, speed: 1.8 },
-                { x: 200, y: worldHeight - 300, color: 0xff00ff, speed: 2.2 }
+                { x: 200, y: 400, color: 0xff0000, speed: 3, direction: 1 },
+                { x: 400, y: 400, color: 0x0000ff, speed: 2.5, direction: 1 },
+                { x: 600, y: 400, color: 0x00ff00, speed: 4, direction: 1 },
+                { x: 200, y: worldHeight - 400, color: 0xffff00, speed: 2.8, direction: -1 },
+                { x: 400, y: worldHeight - 400, color: 0xff00ff, speed: 3.5, direction: -1 }
             ];
             
             cars.forEach(car => {
-                const carSprite = this.add.rectangle(car.x, car.y, 60, 30, car.color);
-                carSprite.setAngle(90);
+                const carSprite = this.add.rectangle(car.x, car.y, 80, 40, car.color);
+                carSprite.setAngle(car.direction > 0 ? 90 : -90);
+                
+                // Add physics body
+                this.physics.add.existing(carSprite, true);
                 
                 // Animate car movement
                 this.tweens.add({
                     targets: carSprite,
-                    x: car.x + (Math.random() > 0.5 ? 1 : -1) * 2000,
-                    duration: 10000 / car.speed,
+                    x: car.x + car.direction * 3000,
+                    duration: 12000 / car.speed,
                     repeat: -1,
                     yoyo: true,
                     ease: 'Linear'
                 });
             });
-            console.log('Animated cars created');
+            console.log('Animated cars with physics created');
             
-            // Create animated birds
-            for (let i = 0; i < 15; i++) {
-                const bird = this.add.circle(Math.random() * worldWidth, Math.random() * 500, 8, 0x000000);
+            // Create enhanced animated birds
+            for (let i = 0; i < 25; i++) {
+                const bird = this.add.graphics();
+                bird.fillStyle(0x000000);
+                bird.fillCircle(0, 0, 6);
+                bird.fillCircle(-3, -2, 3);
+                bird.fillCircle(3, -2, 3);
+                
+                bird.x = Math.random() * worldWidth;
+                bird.y = Math.random() * 600 + 100;
                 
                 // Animate bird flight
                 this.tweens.add({
                     targets: bird,
                     x: Math.random() * worldWidth,
-                    y: Math.random() * 500,
-                    duration: 8000 + Math.random() * 12000,
+                    y: Math.random() * 600 + 100,
+                    duration: 10000 + Math.random() * 15000,
                     repeat: -1,
                     ease: 'Sine.easeInOut'
                 });
@@ -916,86 +1007,116 @@
                 // Add wing flapping animation
                 this.tweens.add({
                     targets: bird,
-                    scaleY: 0.5,
-                    duration: 200,
+                    scaleY: 0.3,
+                    duration: 150,
                     yoyo: true,
                     repeat: -1,
                     ease: 'Sine.easeInOut'
                 });
             }
-            console.log('Animated birds created');
+            console.log('Enhanced animated birds created');
             
-            // Create trees
+            // Create trees with physics
             const trees = [];
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 80; i++) {
                 const x = Math.random() * worldWidth;
-                const y = Math.random() * (worldHeight - 600) + 300;
+                const y = Math.random() * (worldHeight - 800) + 400;
                 
                 // Tree trunk
-                const trunk = this.add.rectangle(x, y, 20, 60, 0x8B4513);
-                // Tree leaves
-                const leaves = this.add.circle(x, y - 30, 40, 0x228B22);
-                
-                // Store tree for collision checking
+                const trunk = this.add.rectangle(x, y, 25, 80, 0x8B4513);
+                this.physics.add.existing(trunk, true);
                 trees.push(trunk);
+                
+                // Tree leaves with 3D effect
+                const leaves = this.add.circle(x, y - 40, 50, 0x228B22);
+                const leavesDepth = this.add.circle(x + 10, y - 35, 50, 0x1A6B1A);
+                leavesDepth.setDepth(-1);
+                
+                // Animate trees
+                this.tweens.add({
+                    targets: leaves,
+                    scaleX: 1.1,
+                    scaleY: 1.1,
+                    duration: 4000 + Math.random() * 6000,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
             }
-            console.log('Trees created');
+            console.log('Enhanced trees with physics created');
             
-            // Create advanced 3D NPCs with walking animations
+            // Create ultra-advanced animated NPCs
             const npcs = [
-                { x: 600, y: 600, color: 0x4169e1, name: 'Dr. Sarah Chen', role: 'AI Researcher', message: 'Welcome to our AI research lab! I work on Graph Neural Networks.' },
-                { x: 1100, y: 500, color: 0xff6347, name: 'Mike Rodriguez', role: 'Tech Lead', message: 'Hey! I lead the development team here. Check out our latest projects!' },
-                { x: 1600, y: 700, color: 0x32cd32, name: 'Alex Johnson', role: 'Data Scientist', message: 'I specialize in quantitative analysis and machine learning. Want to see my work?' },
-                { x: 600, y: 1300, color: 0xffd700, name: 'Prof. Martinez', role: 'Mentor', message: 'I mentor students in computer science. Looking for guidance?' },
-                { x: 1100, y: 1400, color: 0x9370db, name: 'Lisa Wang', role: 'Designer', message: 'I create beautiful user interfaces. Design is my passion!' },
-                { x: 1600, y: 1500, color: 0xff69b4, name: 'David Kim', role: 'Engineer', message: 'I build scalable systems and love solving complex problems!' }
+                { x: 700, y: 700, color: 0x4169e1, name: 'Dr. Sarah Chen', role: 'AI Researcher', message: 'Welcome to our AI research lab! I work on Graph Neural Networks.' },
+                { x: 1300, y: 600, color: 0xff6347, name: 'Mike Rodriguez', role: 'Tech Lead', message: 'Hey! I lead the development team here. Check out our latest projects!' },
+                { x: 1900, y: 800, color: 0x32cd32, name: 'Alex Johnson', role: 'Data Scientist', message: 'I specialize in quantitative analysis and machine learning. Want to see my work?' },
+                { x: 700, y: 1600, color: 0xffd700, name: 'Prof. Martinez', role: 'Mentor', message: 'I mentor students in computer science. Looking for guidance?' },
+                { x: 1300, y: 1700, color: 0x9370db, name: 'Lisa Wang', role: 'Designer', message: 'I create beautiful user interfaces. Design is my passion!' },
+                { x: 1900, y: 1800, color: 0xff69b4, name: 'David Kim', role: 'Engineer', message: 'I build scalable systems and love solving complex problems!' }
             ];
             
             npcs.forEach(npc => {
-                // Create advanced 3D person sprite
+                // Create ultra-advanced 3D person sprite
                 const person = this.add.graphics();
-                person.fillStyle(npc.color);
                 
-                // 3D Head with shading
-                person.fillCircle(0, -20, 15);
-                person.fillStyle(npc.color - 0x222222);
-                person.fillCircle(-3, -22, 8);
-                
-                // 3D Body with shading
+                // 3D Head with detailed shading
                 person.fillStyle(npc.color);
-                person.fillRect(-10, -8, 20, 35);
-                person.fillStyle(npc.color - 0x222222);
-                person.fillRect(-8, -6, 8, 33);
+                person.fillCircle(0, -25, 18);
+                person.fillStyle(npc.color - 0x333333);
+                person.fillCircle(-5, -27, 10);
+                person.fillStyle(npc.color - 0x111111);
+                person.fillCircle(-8, -29, 6);
                 
-                // 3D Arms
+                // Eyes
+                person.fillStyle(0xFFFFFF);
+                person.fillCircle(-6, -30, 3);
+                person.fillCircle(6, -30, 3);
+                person.fillStyle(0x000000);
+                person.fillCircle(-6, -30, 1.5);
+                person.fillCircle(6, -30, 1.5);
+                
+                // 3D Body with detailed shading
                 person.fillStyle(npc.color);
-                person.fillRect(-18, 2, 10, 4);
-                person.fillRect(8, 2, 10, 4);
+                person.fillRect(-12, -10, 24, 45);
+                person.fillStyle(npc.color - 0x333333);
+                person.fillRect(-10, -8, 12, 43);
+                person.fillStyle(npc.color - 0x111111);
+                person.fillRect(-8, -6, 8, 41);
+                
+                // 3D Arms with movement
+                person.fillStyle(npc.color);
+                person.fillRect(-22, 5, 12, 6);
+                person.fillRect(10, 5, 12, 6);
                 
                 // 3D Legs
-                person.fillRect(-8, 27, 6, 20);
-                person.fillRect(2, 27, 6, 20);
+                person.fillRect(-10, 35, 8, 25);
+                person.fillRect(2, 35, 8, 25);
                 
                 person.x = npc.x;
                 person.y = npc.y;
                 
-                // Add name label
-                const nameLabel = this.add.text(npc.x, npc.y - 50, npc.name, {
-                    fontSize: '14px',
+                // Add physics body
+                this.physics.add.existing(person, true);
+                person.body.setSize(20, 50);
+                person.body.setOffset(-10, -25);
+                
+                // Add name label with 3D effect
+                const nameLabel = this.add.text(npc.x, npc.y - 60, npc.name, {
+                    fontSize: '16px',
                     fill: '#ffffff',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
-                    strokeThickness: 2
+                    strokeThickness: 3
                 });
                 nameLabel.setOrigin(0.5);
                 
                 // Add role label
-                const roleLabel = this.add.text(npc.x, npc.y - 65, npc.role, {
-                    fontSize: '12px',
+                const roleLabel = this.add.text(npc.x, npc.y - 75, npc.role, {
+                    fontSize: '14px',
                     fill: '#ffff00',
                     fontFamily: 'Courier New',
                     stroke: '#000000',
-                    strokeThickness: 1
+                    strokeThickness: 2
                 });
                 roleLabel.setOrigin(0.5);
                 
@@ -1005,7 +1126,7 @@
                 
                 // Add hover effect
                 person.on('pointerover', () => {
-                    person.setScale(1.1);
+                    person.setScale(1.15);
                     nameLabel.setStyle({ fill: '#ffff00' });
                 });
                 
@@ -1017,31 +1138,31 @@
                 // Add click interaction
                 person.on('pointerdown', () => {
                     // Show NPC message
-                    const messageText = this.add.text(npc.x, npc.y - 90, npc.message, {
-                        fontSize: '12px',
+                    const messageText = this.add.text(npc.x, npc.y - 100, npc.message, {
+                        fontSize: '14px',
                         fill: '#ffffff',
                         fontFamily: 'Courier New',
                         stroke: '#000000',
-                        strokeThickness: 2,
+                        strokeThickness: 3,
                         backgroundColor: '#000000',
-                        padding: { x: 15, y: 8 }
+                        padding: { x: 20, y: 10 }
                     });
                     messageText.setOrigin(0.5);
                     
-                    // Fade out message after 4 seconds
+                    // Fade out message after 5 seconds
                     this.tweens.add({
                         targets: messageText,
                         alpha: 0,
-                        duration: 4000,
+                        duration: 5000,
                         onComplete: () => messageText.destroy()
                     });
                 });
                 
-                // Add walking animation
+                // Add complex walking animation
                 this.tweens.add({
                     targets: person,
-                    x: npc.x + (Math.random() - 0.5) * 200,
-                    duration: 8000 + Math.random() * 12000,
+                    x: npc.x + (Math.random() - 0.5) * 300,
+                    duration: 10000 + Math.random() * 15000,
                     yoyo: true,
                     repeat: -1,
                     ease: 'Sine.easeInOut'
@@ -1050,50 +1171,82 @@
                 // Add blinking animation
                 this.tweens.add({
                     targets: person,
-                    alpha: 0.7,
-                    duration: 100,
+                    alpha: 0.6,
+                    duration: 120,
                     yoyo: true,
                     repeat: -1,
-                    repeatDelay: 3000 + Math.random() * 5000
+                    repeatDelay: 2000 + Math.random() * 8000
+                });
+                
+                // Add breathing animation
+                this.tweens.add({
+                    targets: person,
+                    scaleX: 1.02,
+                    scaleY: 1.02,
+                    duration: 3000,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
                 });
             });
-            console.log('Advanced 3D NPCs created');
+            console.log('Ultra-advanced animated NPCs created');
             
-            // Create player with advanced 3D shape and physics
+            // Create ultra-advanced player with physics
             player = this.add.graphics();
-            player.fillStyle(0xff0000);
             
-            // 3D Head with shading
-            player.fillCircle(0, -20, 15);
-            player.fillStyle(0xcc0000);
-            player.fillCircle(-3, -22, 8);
-            
-            // 3D Body with shading
+            // 3D Head with detailed shading
             player.fillStyle(0xff0000);
-            player.fillRect(-10, -8, 20, 35);
+            player.fillCircle(0, -25, 18);
             player.fillStyle(0xcc0000);
-            player.fillRect(-8, -6, 8, 33);
+            player.fillCircle(-5, -27, 10);
+            player.fillStyle(0x990000);
+            player.fillCircle(-8, -29, 6);
+            
+            // Eyes
+            player.fillStyle(0xFFFFFF);
+            player.fillCircle(-6, -30, 3);
+            player.fillCircle(6, -30, 3);
+            player.fillStyle(0x000000);
+            player.fillCircle(-6, -30, 1.5);
+            player.fillCircle(6, -30, 1.5);
+            
+            // 3D Body with detailed shading
+            player.fillStyle(0xff0000);
+            player.fillRect(-12, -10, 24, 45);
+            player.fillStyle(0xcc0000);
+            player.fillRect(-10, -8, 12, 43);
+            player.fillStyle(0x990000);
+            player.fillRect(-8, -6, 8, 41);
             
             // 3D Arms
             player.fillStyle(0xff0000);
-            player.fillRect(-18, 2, 10, 4);
-            player.fillRect(8, 2, 10, 4);
+            player.fillRect(-22, 5, 12, 6);
+            player.fillRect(10, 5, 12, 6);
             
             // 3D Legs
-            player.fillRect(-8, 27, 6, 20);
-            player.fillRect(2, 27, 6, 20);
+            player.fillRect(-10, 35, 8, 25);
+            player.fillRect(2, 35, 8, 25);
             
-            player.x = 200;
-            player.y = 200;
+            player.x = 300;
+            player.y = 300;
             
-            console.log('Player with physics created');
+            // Add physics body
+            this.physics.add.existing(player, true);
+            player.body.setSize(20, 50);
+            player.body.setOffset(-10, -25);
             
-            // Add player walking animation
+            // Add collision with buildings and trees
+            this.physics.add.collider(player, buildingBodies);
+            this.physics.add.collider(player, trees);
+            
+            console.log('Ultra-advanced player with physics created');
+            
+            // Add complex player animations
             this.tweens.add({
                 targets: player,
-                scaleX: 1.05,
-                scaleY: 1.05,
-                duration: 2000,
+                scaleX: 1.03,
+                scaleY: 1.03,
+                duration: 2500,
                 yoyo: true,
                 repeat: -1
             });
@@ -1101,11 +1254,22 @@
             // Add blinking animation
             this.tweens.add({
                 targets: player,
-                alpha: 0.8,
+                alpha: 0.7,
                 duration: 150,
                 yoyo: true,
                 repeat: -1,
-                repeatDelay: 4000 + Math.random() * 3000
+                repeatDelay: 3000 + Math.random() * 5000
+            });
+            
+            // Add breathing animation
+            this.tweens.add({
+                targets: player,
+                scaleX: 1.01,
+                scaleY: 1.01,
+                duration: 4000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
             });
             
             console.log('Player animations added');
@@ -1113,7 +1277,7 @@
             // Set up camera to follow player
             this.cameras.main.startFollow(player);
             this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
-            this.cameras.main.setZoom(0.6);
+            this.cameras.main.setZoom(0.5);
             console.log('Camera setup completed');
             
             // Set up input
@@ -1121,16 +1285,10 @@
             wasd = this.input.keyboard.addKeys('W,S,A,D');
             console.log('Input controls set up');
             
-            // Add spacebar to jump (simple animation)
+            // Add spacebar to jump with physics
             this.input.keyboard.on('keydown-SPACE', () => {
-                if (player) {
-                    this.tweens.add({
-                        targets: player,
-                        y: player.y - 50,
-                        duration: 300,
-                        yoyo: true,
-                        ease: 'Back.easeOut'
-                    });
+                if (player && player.body.touching.down) {
+                    player.body.setVelocityY(-500);
                 }
             });
             
@@ -1141,57 +1299,43 @@
                         targets: player,
                         x: pointer.worldX,
                         y: pointer.worldY,
-                        duration: 1500,
+                        duration: 2000,
                         ease: 'Power2.easeOut'
                     });
                 }
             });
             
-            console.log('Advanced 3D world creation completed successfully!');
+            console.log('Ultra-advanced 3D world creation completed successfully!');
         }
 
         // Update game loop
         function update() {
             if (!player) return;
-
-            // Store old position for collision detection
-            const oldX = player.x;
-            const oldY = player.y;
             
-            // Player movement with manual positioning (no physics body)
-            const speed = 200;
-            const delta = this.game.loop.delta / 1000;
-
+            // Player movement with physics
+            const speed = 300;
+            
             if (cursors.left.isDown || wasd.A.isDown) {
-                player.x -= speed * delta;
-            }
-            if (cursors.right.isDown || wasd.D.isDown) {
-                player.x += speed * delta;
-            }
-            if (cursors.up.isDown || wasd.W.isDown) {
-                player.y -= speed * delta;
-            }
-            if (cursors.down.isDown || wasd.S.isDown) {
-                player.y += speed * delta;
+                player.body.setVelocityX(-speed);
+            } else if (cursors.right.isDown || wasd.D.isDown) {
+                player.body.setVelocityX(speed);
+            } else {
+                player.body.setVelocityX(0);
             }
             
-            // Manual collision detection with buildings
-            if (window.buildingBodies) {
-                for (let building of buildingBodies) {
-                    if (Phaser.Geom.Rectangle.Contains(building.getBounds(), player.x, player.y)) {
-                        // Collision detected, revert to old position
-                        player.x = oldX;
-                        player.y = oldY;
-                        break;
-                    }
-                }
+            if (cursors.up.isDown || wasd.W.isDown) {
+                player.body.setVelocityY(-speed);
+            } else if (cursors.down.isDown || wasd.S.isDown) {
+                player.body.setVelocityY(speed);
+            } else {
+                player.body.setVelocityY(0);
             }
             
             // Keep player within world bounds
             if (player.x < 30) player.x = 30;
-            if (player.x > 3970) player.x = 3970;
+            if (player.x > 4970) player.x = 4970;
             if (player.y < 30) player.y = 30;
-            if (player.y > 2970) player.y = 2970;
+            if (player.y > 3970) player.y = 3970;
             
             // Check for random interactions (buildings, NPCs, etc.)
             if (Math.random() < 0.0003) { // 0.03% chance per frame
